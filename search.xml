@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>扩展巴科斯范式</title>
+    <url>/2019/12/24/EBNF/</url>
+    <content><![CDATA[<p>扩展巴科斯-瑙尔范式(EBNF, Extended Backus–Naur Form)是表达作为描述计算机编程语言和形式语言的正规方式的上下文无关文法的元语法(metalanguage)符号表示法 —— wikipedia。</p>
+<blockquote>
+<p>白话就是定义的一种用来表示一种语言的语法形式的一种表示方法。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>例子：</p>
+<p>EBNF 定义</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="comment">(* a simple program in EBNF − Wikipedia *)</span></span><br><span class="line"><span class="attribute">program</span> = <span class="string">'PROGRAM'</span> , white space , identifier , white space ,</span><br><span class="line">           <span class="string">'BEGIN'</span> , white space ,</span><br><span class="line">           &#123; assignment , <span class="string">";"</span> , white space &#125; ,</span><br><span class="line">           <span class="string">'END.'</span> ;</span><br><span class="line"><span class="attribute">identifier</span> = alphabetic character , [ &#123; alphabetic character | digit &#125; ] ;</span><br><span class="line"><span class="attribute">number</span> = [ <span class="string">"-"</span> ] , digit , [ &#123; digit &#125; ] ;</span><br><span class="line"><span class="attribute">string</span> = <span class="string">'"'</span> , &#123; all characters − <span class="string">'"'</span> &#125; , <span class="string">'"'</span> ;</span><br><span class="line"><span class="attribute">assignment</span> = identifier , <span class="string">":="</span> , ( number | identifier | string ) ;</span><br><span class="line"><span class="attribute">alphabetic character</span> = <span class="string">"A"</span> | <span class="string">"B"</span> | <span class="string">"C"</span> | <span class="string">"D"</span> | <span class="string">"E"</span> | <span class="string">"F"</span> | <span class="string">"G"</span></span><br><span class="line">                     | <span class="string">"H"</span> | <span class="string">"I"</span> | <span class="string">"J"</span> | <span class="string">"K"</span> | <span class="string">"L"</span> | <span class="string">"M"</span> | <span class="string">"N"</span></span><br><span class="line">                     | <span class="string">"O"</span> | <span class="string">"P"</span> | <span class="string">"Q"</span> | <span class="string">"R"</span> | <span class="string">"S"</span> | <span class="string">"T"</span> | <span class="string">"U"</span></span><br><span class="line">                     | <span class="string">"V"</span> | <span class="string">"W"</span> | <span class="string">"X"</span> | <span class="string">"Y"</span> | <span class="string">"Z"</span> ;</span><br><span class="line"><span class="attribute">digit</span> = <span class="string">"0"</span> | <span class="string">"1"</span> | <span class="string">"2"</span> | <span class="string">"3"</span> | <span class="string">"4"</span> | <span class="string">"5"</span> | <span class="string">"6"</span> | <span class="string">"7"</span> | <span class="string">"8"</span> | <span class="string">"9"</span> ;</span><br><span class="line"><span class="attribute">white space</span> = <span class="meta">? white space characters ?</span> ;</span><br><span class="line"><span class="attribute">all characters</span> = <span class="meta">? all visible characters ?</span> ;</span><br></pre></td></tr></table></figure>
+
+<p>对应符合语法的程序</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">PROGRAM DEMO1 </span><br><span class="line"><span class="attribute">BEGIN</span></span><br><span class="line">  A0:=3;</span><br><span class="line">  B:=45;</span><br><span class="line">  H:=-100023;</span><br><span class="line">  C:=A;</span><br><span class="line">  D123:=B34A;</span><br><span class="line">  BABOON:=GIRAFFE;</span><br><span class="line">  TEXT:="Hello world!";</span><br><span class="line">END.</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-可用的符号表"><a href="#1-可用的符号表" class="headerlink" title="1. 可用的符号表"></a>1. 可用的符号表</h3><table>
+<thead>
+<tr>
+<th>用途</th>
+<th>符号表示</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定义</td>
+<td>=</td>
+</tr>
+<tr>
+<td>串接</td>
+<td>,</td>
+</tr>
+<tr>
+<td>终止</td>
+<td>;</td>
+</tr>
+<tr>
+<td>分隔</td>
+<td>|</td>
+</tr>
+<tr>
+<td>可选</td>
+<td>[ … ]</td>
+</tr>
+<tr>
+<td>重复</td>
+<td>{ … }</td>
+</tr>
+<tr>
+<td>分组</td>
+<td>( … )</td>
+</tr>
+<tr>
+<td>双引号</td>
+<td>“ … “</td>
+</tr>
+<tr>
+<td>单引号</td>
+<td>‘ … ‘</td>
+</tr>
+<tr>
+<td>注释</td>
+<td>(* … *)</td>
+</tr>
+<tr>
+<td>特殊序列</td>
+<td>? … ?</td>
+</tr>
+<tr>
+<td>除外</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h3 id="2-符号表示意义"><a href="#2-符号表示意义" class="headerlink" title="2. 符号表示意义"></a>2. 符号表示意义</h3><ol>
+<li><code>,</code> 符号</li>
+</ol>
+<p>串接。连接字符串或者关键字的内容。<br>如:  </p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">zero</span> = <span class="string">"0"</span>;</span><br><span class="line"><span class="attribute">natural number</span> = <span class="string">"1"</span> , <span class="string">"2"</span> , <span class="string">"3"</span> , <span class="string">"4"</span> , <span class="string">"5"</span> , <span class="string">"6"</span> , <span class="string">"7"</span> , <span class="string">"8"</span> , <span class="string">"9"</span>, zero;</span><br></pre></td></tr></table></figure>
+
+<p>natural number 将 zero 和 1-9 连接起来，可表示 0-9 之间的数</p>
+<ol start="2">
+<li><code>|</code> 符号</li>
+</ol>
+<p>分隔符号，等价于<code>或</code>。<br>如 <code>digit excluding zero = &quot;1&quot; | &quot;2&quot; | &quot;3&quot; | &quot;4&quot; | &quot;5&quot; | &quot;6&quot; | &quot;7&quot; | &quot;8&quot; | &quot;9&quot; ;</code> 意味着 digit excluding zero 可以是 1-9 中的任意自然数。</p>
+<ol start="3">
+<li><code>[...]</code> 符号</li>
+</ol>
+<p>表示可选符号。与常规编程语言中的可选不太一样，此处可选还与次数有关。<br>如： </p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">cc</span> = 3 * [<span class="string">"A"</span>], <span class="string">"C"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可表示的字符串</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cc: C AC AAC AAAC</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><code>{...}</code> 符号</li>
+</ol>
+<p>表示重复，与正则中的 <code>.</code> 意义一致，表可重复0次或多次。</p>
+<p>如： </p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">dd</span> = &#123;<span class="string">"A"</span>&#125;, <span class="string">"D"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可表示的字符串</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dd: D AD AAD AAAD AAAAD etc.</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>tokenize</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git rebase 基础用法</title>
+    <url>/2020/04/14/Git-rebase/</url>
+    <content><![CDATA[<p><code>git rebase</code> 被翻译为<strong>变基</strong>，该命令的作用就是整理提交历史，效果是使得提交历史变成连续的，没有分叉。在团队开发时，经常需要进行合并，我们知道，一般使用 <code>git pull</code> 或 <code>git merge</code> 合并远程代码，合并时会优先使用<strong>快速</strong>合并，若不能快速合并则会采取<strong>三方合并</strong>，会添加一个 commit，commit 记录了被合并的两个 parent。</p>
+<p>其实合并的方式不止默认的这两种方式，rebase/squash 等合并方式更是可以带来干净整洁的提交历史。</p>
+<a id="more"></a>
+
+<p><img src="/images/git-rebase-show.png" alt=""></p>
+<h3 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h3><p>通常合并分支我们有两种方法，<code>merge</code> 和 <code>rebase</code>，先看看在使用 <code>merge</code> 时合并分支的效果<br>下图中，灰色表示 <code>commit</code> 橙色表示分支</p>
+<p><img src="/images/basic-rebase-1.png" alt=""></p>
+<p>使用 <code>git merge</code> 将 experiment 合并到 master 后，提交历史变为了：  </p>
+<p><img src="/images/basic-rebase-2.png" alt=""></p>
+<p>图示中的这种合并方式称为 <strong>三方合并</strong>，将两个分支的最新提交与和两个分支的最近共同祖先进行合并，这种合并方式会生成一个新的 <code>commit</code>，通过 <code>git cat-file</code> 查看该 commit 可发现其包含两个 parent，分别为两个分支的最新提交。</p>
+<h3 id="git-rebase"><a href="#git-rebase" class="headerlink" title="git rebase"></a>git rebase</h3><p>用法：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rebase [-i | --interactive] [&lt;options&gt;] [--exec &lt;cmd&gt;]</span><br><span class="line">	[--onto &lt;newbase&gt; | --keep-base] [&lt;upstream&gt; [&lt;branch&gt;]]</span><br><span class="line">git rebase [-i | --interactive] [&lt;options&gt;] [--exec &lt;cmd&gt;] [--onto &lt;newbase&gt;]</span><br><span class="line">	--root [&lt;branch&gt;]</span><br><span class="line">git rebase (--continue | --skip | --abort | --quit | --edit-todo | --show-current-patch)</span><br></pre></td></tr></table></figure>
+
+<p>同上面的例子相同，如果使用 <code>git rebase</code> 合并分支  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> git checkout experiment</span><br><span class="line"><span class="meta">$</span> git rebase master</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里 <code>git rebase master</code> 与 <code>git rebase master experiment</code> 是等效的。默认的目标分支就是当前分支。</p>
+</blockquote>
+<p>合并时，<code>master</code> 为基底分支，当前分支是 <code>experiment</code>，两者的最近共同祖先是 <code>c2</code>。合并时的步骤是：  </p>
+<ol>
+<li>将当前分支相对与祖先分支的全部提交提取为零时文件。</li>
+<li>将当前分支指向基底分支指向的 <code>commit</code>，然后将零时文件记录的修改依次应用。</li>
+</ol>
+<p>重应用零时文件的内容虽与原来相同，但是会在当前分支上重新提交，commit 信息和原来不同。</p>
+<p><img src="/images/basic-rebase-3.png" alt=""></p>
+<p>最后将 <code>experiment</code> merge 到 <code>master</code> 后得到一条完美的提交历史</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> git checkout master</span><br><span class="line"><span class="meta">$</span> git merge experiment</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/basic-rebase-4.png" alt=""></p>
+<h3 id="删除提交"><a href="#删除提交" class="headerlink" title="删除提交"></a>删除提交</h3><p><code>git rebase</code> 还可以删除一定范围内的提交<br>如分支历史为  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">E---F---G---H---I---J  topicA</span><br></pre></td></tr></table></figure>
+
+<p>如果使用命令  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git rebase --onto topicA~5 topicA~3 topicA</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>–onto &lt;newbase&gt; 选项表示以&lt;newbase&gt;为重放差异的基础。会将当前分支重置为 &lt;newbase&gt;，相当于 <code>git reset --hard &lt;newbase&gt;</code> 。</p>
+</blockquote>
+<p>该命令的意思是找出 <code>topicA~3</code> 和 <code>topicA</code> 的差异，并以 <code>topicA~5</code> 为基础重放，操作的分支为 <code>topicA</code>。<br>操作结果会删除 F 和 G 提交，最后提交历史变成：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">E---H&apos;---I&apos;---J&apos;  topicA</span><br></pre></td></tr></table></figure>
+
+<p>其中 H’/I’/J’ 是原 H/I/J 的新版本</p>
+]]></content>
+      <tags>
+        <tag>git</tag>
+        <tag>原理</tag>
+        <tag>转载</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>微前端</title>
+    <url>/2020/03/27/Micro-frontend/</url>
+    <content><![CDATA[<p>技术圈是比较爱炒概念的，中台、微服务、DDD一时都变成比较热门的话题，微前端作为微服务的一种自然也免不了俗。在我看来，大多数情况下大多数公司都用不上微前端。当然微前端不是什么新技术，只是为了解决实际问题的一种方法。微前端这三个字听起来不明所以，实际上只是将项目打散，变成若干小项目的合集，使用一种方案使得在多个项目之前平滑切换的方法。</p>
+<a id="more"></a>
+
+<h2 id="为什么需要微前端"><a href="#为什么需要微前端" class="headerlink" title="为什么需要微前端"></a>为什么需要微前端</h2><p>前面说过，大多数情况下我们是不需要微前端的，通过清晰的组件划分，部分情况下使用 iframe 嵌入就能解决绝大部分问题。但是微前端对下面的问题解决起来更有优势：</p>
+<ol>
+<li><p>迭代日积月累导致维护困难<br>一个生命周期超长的软件，必然产生出一个体积庞大的软件。软件会囊括各种交错复杂的业务逻辑，阅读维护起来特别困难。前端项目体积滋长还会使编译时间越来越长，本地开发热更新时电脑吃力，卡机。</p>
+</li>
+<li><p>技术栈多样性<br>公司在逐步扩大业务，永远有新的业务需要上线，永远有新的技术栈在尝试。庞大的单体软件很难同时运行多个技术栈，很难在业务中尝试使用新的技术，举步维艰。</p>
+</li>
+<li><p>跨团队开发<br>若同一项目交给多个团队同时开发，由于是同一项目同一仓库，团队开发的资源并没有隔离经常会导致代码冲突，互相影响业务功能，造成开发风险。</p>
+</li>
+</ol>
+<h3 id="技术方案"><a href="#技术方案" class="headerlink" title="技术方案"></a>技术方案</h3><ol>
+<li>iframe 嵌套多个子项目</li>
+<li>MPA 多子项目之前通过链接跳转</li>
+<li>整合多个子项目资源，由主项目动态导航不同的子项目</li>
+</ol>
+<p>这里重点介绍第三种</p>
+<h3 id="Single-SPA"><a href="#Single-SPA" class="headerlink" title="Single-SPA"></a>Single-SPA</h3><p>这种方案的重点是加载子应用资源，并根据路由进行资源导航，实现的方式市面上的工具各有不同<br>比较知名的开源方案有：</p>
+<ol>
+<li>Single-SPA</li>
+<li>Qiankun</li>
+<li>icestark</li>
+</ol>
+<p>qiankun 使用了 single-SPA 的路由系统，且实现了一个 sandbox，用来隔离 js 运行环境。icestark 是飞冰团队的微前端方案，整体思路和前两者也比较接近。这里以 single-SPA 介绍其实现思路。</p>
+<p>Single-SPA 将项目分为了主应用和子应用，主应用负责子应用导航，加载 JS、挂载应用等功能，而我们的主要业务代码放在子应用内。</p>
+<p>主应用注册子应用示例</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; registerApplication, start &#125; <span class="keyword">from</span> <span class="string">"single-spa"</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> isActive <span class="keyword">from</span> <span class="string">"./activity-functions"</span>;</span><br><span class="line"></span><br><span class="line">registerApplication(</span><br><span class="line">  <span class="string">"@react-mf/navbar"</span>,</span><br><span class="line">  <span class="comment">// System.import 是 system.js 提供的异步导入 js 模块的方法</span></span><br><span class="line">  () =&gt; System.import(<span class="string">"@react-mf/navbar"</span>),</span><br><span class="line">  isActive.navbar</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">registerApplication(</span><br><span class="line">  <span class="string">"@react-mf/people"</span>,</span><br><span class="line">  () =&gt; System.import(<span class="string">"@react-mf/people"</span>),</span><br><span class="line">  isActive.people</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">registerApplication(</span><br><span class="line">  <span class="string">"@react-mf/planets"</span>,</span><br><span class="line">  () =&gt; System.import(<span class="string">"@react-mf/planets"</span>),</span><br><span class="line">  isActive.planets</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">start();</span><br></pre></td></tr></table></figure>
+
+<p>子应用导出示例</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">"./set-public-path"</span>;</span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> singleSpaReact <span class="keyword">from</span> <span class="string">"single-spa-react"</span>;</span><br><span class="line"><span class="keyword">import</span> Root <span class="keyword">from</span> <span class="string">"./root.component"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> lifecycles = singleSpaReact(&#123;</span><br><span class="line">  React,</span><br><span class="line">  ReactDOM,</span><br><span class="line">  rootComponent: Root</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> bootstrap = lifecycles.bootstrap;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> mount = lifecycles.mount;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> unmount = lifecycles.unmount;</span><br></pre></td></tr></table></figure>
+
+<p>上面的两个代码示例介绍了 single-spa 的使用方法。那 single-spa 怎么实现微前端的呢？整体思路为：</p>
+<ol>
+<li><p>子应用导出生命周期函数<br>子应用需导出 <code>bootstrap</code>、<code>mount</code>、<code>unmount</code>、<code>update（可选）</code>函数，用于在 <code>single-spa</code> 生命周期中调用来挂载和卸载子应用</p>
+</li>
+<li><p>single-spa 提供 <code>registerApplication</code> 注册子应用。<br>该方法第二个参数 <code>applicationOrLoadingFn</code> 用于异步导入子应用的资源包，示例中使用了 system.js 提供的 import 方法导入，当然别的异步导入方法也是支持的，只要返回一个 Promise 就行。<br>该方法第三个参数 <code>activityFn</code> 用于确认是否激活该子应用。这是 single-spa 路由系统的关键，只有激活状态的子应用才会 mount。<br>方法调用后会生成一个 app 对象并将 name, applicationOrLoadingFn, activityFn 等参数挂载到 app。</p>
+</li>
+<li><p>调用 <code>reroute</code> 方法挂载应用<br>如果子应用还未调用 <code>start</code> 方法则会调用 <code>loadApps</code> 将所有激活状态（通过 activityFn）的子应用的 load 下来，并将子应用生命周期方法挂到 app 对象中。<br>否则，调用 <code>performAppChanges</code>。该方法会先后调用需激活的子应用的 bootstrap、mount 方法完成子组件的挂载。</p>
+</li>
+<li><p>监听 <code>hashchange</code>, <code>popstate</code> 事件拦截路由变化<br>路由变化时 single-spa 会重新调用 <code>reroute</code> 决定哪些子应用需要 unmount，哪些应用需要 mount。<br>不仅如此，还会重写 <code>window.addEventListener</code> 和 <code>window.removeEventListener</code> 拦截所有 <code>hashchange</code> 和 <code>popstate</code> 的事件注册，<br>使事件处理器在子应用在 single-spa 处理完子应用的 <code>load</code>、挂载或卸载之后才被调用。</p>
+</li>
+</ol>
+<h3 id="Single-SPA-与-Qiankun"><a href="#Single-SPA-与-Qiankun" class="headerlink" title="Single-SPA 与 Qiankun"></a>Single-SPA 与 Qiankun</h3><ol>
+<li><p>qiankun 实现了一个 JS sandbox，避免子应用之间的环境污染  </p>
+<p> 实现逻辑：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> rawWindow = <span class="built_in">window</span>;</span><br><span class="line"><span class="keyword">const</span> fakeWindow = <span class="built_in">Object</span>.create(<span class="literal">null</span>) <span class="keyword">as</span> Window;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sandbox: WindowProxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(fakeWindow, &#123;</span><br><span class="line">    <span class="keyword">set</span>(_: Window, p: PropertyKey, value: any): boolean &#123;</span><br><span class="line">      <span class="comment">// 省略...</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="keyword">get</span>(_: Window, p: PropertyKey): any &#123;</span><br><span class="line">      <span class="comment">// 省略...</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    has(_: Window, <span class="attr">p</span>: string | number | symbol): boolean &#123;</span><br><span class="line">      <span class="keyword">return</span> p <span class="keyword">in</span> rawWindow;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p> qiankun 通过 <code>Proxy</code> 拦截了 <code>fakeWindow</code> 对象，在使用他们编写的插件 <code>import-html-entry</code> load 子应用 js 时将其作为子应用的 window，并且每个子应用生成的对象都不同。这样，就实现了每个子应用的环境独立，避免变量污染。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// get the entry html content and script executor</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">template</span>: appContent, execScripts, assetPublicPath &#125; = <span class="keyword">await</span> importEntry(entry, &#123;</span><br><span class="line">    <span class="comment">// compose the config getTemplate function with default wrapper</span></span><br><span class="line">    getTemplate: flow(getTemplate, getDefaultTplWrapper(appName)),</span><br><span class="line">    ...settings,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//省略部分代码...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// get the lifecycle hooks from module exports</span></span><br><span class="line"><span class="keyword">let</span> &#123; <span class="attr">bootstrap</span>: bootstrapApp, mount, unmount &#125; = <span class="keyword">await</span> execScripts(jsSandbox);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>JS Entry</strong> vs <strong>HTML Entry</strong><br> qiankun 采用 HTML Entry 作为资源注入方式，single-SPA 采用 JS Entry 方式注入。</p>
+<p> JS Entry 方式要求主应用必须给子应用提供一个挂载的 DOM 节点；子应用需要将资源（js、css 等）打包到一个文件，或者打包时将所有子应用的资源路径单独保存配置，在主应用引用；</p>
+<p> HTML Entry 方式则不需要单独提供挂载点，也不需要单独处理资源加载的问题，无论是挂载点还是资源都在 HTML 中，都能一次性全部解析到。qiankun 拉取和解析 html 还是使用 <code>import-html-entry</code> 完成的。</p>
+</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>微前端</tag>
+        <tag>micro frontend</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mobx-react</title>
+    <url>/2019/09/23/Mobx-react/</url>
+    <content><![CDATA[<p>Mobx 是一种状态管理方案。不同于 redux 将状态定义为不可变状态，mobx 会自动收集依赖，以可变状态的方式直接修改原始状态，这点与 Vue 的状态管理很像。</p>
+<p>在 es6 环境下，可以直接使用装饰器定义状态及方法：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; observable &#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CounterStore</span> </span>&#123;</span><br><span class="line">    @observable count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    @action</span><br><span class="line">    increase() &#123;</span><br><span class="line">        <span class="keyword">this</span>.count++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @action</span><br><span class="line">    decrease() &#123;</span><br><span class="line">        <span class="keyword">this</span>.count--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> CounterStore();</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p><code>@action</code> 用来定义状态修改方法，<code>@observable</code> 用来定义可观察对象。</p>
+<p>在 react 中可使用 <code>mobx-react</code> 提供的 <code>Provider</code> 组件装载 store</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider, observer, inject &#125; <span class="keyword">from</span> <span class="string">'mobx-react'</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">'react-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./counter-store'</span>;</span><br><span class="line"></span><br><span class="line">@inject(<span class="string">'store'</span>)</span><br><span class="line">@observer</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Counter</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;div&gt;</span><br><span class="line">                自动响应 @action 对状态的变更：&#123;<span class="keyword">this</span>.props.store.count&#125;</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                    &lt;button onClick=&#123;() =&gt; <span class="keyword">this</span>.props.store.increase()&#125;&gt;+&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;button onClick=&#123;() =&gt; this.props.store.decrease()&#125;&gt;-&lt;/</span>button&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>div&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">    &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">        &lt;Counter /&gt;</span><br><span class="line">    &lt;<span class="regexp">/Provider&gt;,</span></span><br><span class="line"><span class="regexp">    document.getElementById('mount')</span></span><br><span class="line"><span class="regexp">);</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@inject</code> 用于将 <code>Provider</code> 传入的 props 注入到组件中。这里可将 store 注入到 <code>Provider</code> 的子组件中，当然也支持多个 store 同时注入。</p>
+]]></content>
+      <tags>
+        <tag>react</tag>
+        <tag>mobx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何设置 Node 的 header size</title>
+    <url>/2020/11/19/Node-max-header-size/</url>
+    <content><![CDATA[<h2 id="Header-size-是什么"><a href="#Header-size-是什么" class="headerlink" title="Header size 是什么"></a>Header size 是什么</h2><p>每当任何客户端向服务器发送请求时，它也会发送一些头信息，所有服务器都对头缓冲区有一些预定义的限制。如果头缓冲区大小超过预定义的限制服务器，它将拒绝客户端请求，NodeJS 从 v6.15.0、v8.14.0、v10.14.0、v11.3.0 版本显著减小了（从80KB到8KB）头缓冲区的大小。</p>
+<a id="more"></a>
+
+<h2 id="为什么需要增加-header-size"><a href="#为什么需要增加-header-size" class="headerlink" title="为什么需要增加 header size"></a>为什么需要增加 header size</h2><p>可能很少有情况需要增加 header size，下面是可能需要调整 header size 的原因</p>
+<ol>
+<li>应用集成了多种服务，如 google analytics 等，可能增加 header size 。 </li>
+<li>如果使用一些用户校验方式，如 JWT，它的 token 长度可能会使 header size 超过限制。</li>
+<li>请求中有许多自定义 header。</li>
+<li>cookies 数据太大。</li>
+</ol>
+<h2 id="如何修改-header-size"><a href="#如何修改-header-size" class="headerlink" title="如何修改 header size"></a>如何修改 header size</h2><ol>
+<li><p>可修改 npm script，增加 <code>max-http-header-size</code> 选项，也可直接在命令行运行该 script。</p>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">scripts:&#123;</span><br><span class="line">    node --max-http-header-size=<span class="number">16000</span> server.js</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果使用 pm2，可增加 node-args 参数。</p>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pm2 start server.js --node-args=<span class="string">"--max-http-header-size=16000"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果使用 pm2 配置文件启动项目, 可增加 node_args 选项。</p>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  apps : [&#123;</span><br><span class="line">    name: <span class="string">"app"</span>,</span><br><span class="line">    script: <span class="string">"./server.js"</span>,</span><br><span class="line">    node_args: <span class="string">"--max-http-header-size=16000"</span></span><br><span class="line">    env: &#123;</span><br><span class="line">      NODE_ENV: <span class="string">"development"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    env_production: &#123;</span><br><span class="line">      NODE_ENV: <span class="string">"production"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Node</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CSS 粘性定位 position: sticky</title>
+    <url>/2020/03/10/Sticky/</url>
+    <content><![CDATA[<p>顾名思义，sticky 就是将某元素粘在某个位置的意思。这里不用固定而用”粘“是因为要”粘“住一个东西必须先与这个东西要有接触才能说得上粘住。</p>
+<p>”粘“针对两个物体，被粘物与粘结物。这里的被粘物指我们的元素，粘结物是滚动容器的边界（上下左右）。通常我们实现这个效果都会使用 JS 来监听滚动并计算滚动位置来实现。现在你可以通过 CSS 来实现，通过查看 caniuse 可知，兼容性不是太好，不过可以使用 <a href="https://github.com/wilddeer/stickyfill">polyfill</a>。</p>
+<a id="more"></a>
+<p><img src="/images/sticky-caniuse.png" alt="sticky caniuse"></p>
+<p>一个简单的例子：</p>
+<iframe id="cp_embed_WNvdzya" src="//codepen.io/leijuns/embed/WNvdzya?height=500&theme-id=33713&slug-hash=WNvdzya&default-tab=result&embed-version=2" scrolling="no" frameborder="no" height="500" allowTransparency="true" allowfullscreen="true" class="cp_embed_iframe" style="width: 100%; overflow: hidden;"></iframe>
+
+<p>对于这个例子，滚动容器是 <code>body</code>，被粘物体是 <code>nav</code>，约束物是 <code>.box</code>。具体来说：</p>
+<ol>
+<li>sticky 定位是针对滚动过程中元素的显示效果。所以滚动是粘滞效果的触发先决条件。</li>
+<li>约束物是被粘物的包含块，决定了元素应该粘滞在什么地方及约束了粘滞效果必须作用在内部。</li>
+<li>被粘物表示是什么元素会产生粘滞效果。</li>
+</ol>
+<p>定位过程是：</p>
+<ol>
+<li>默认状态下，<code>.box</code> 的 margin-top：50px 大于 nav 的 top: 20px，此时 nav 正常显示。</li>
+<li>在 body 中继续往下滚动，直到 <code>nav</code> 距离滚动容器顶部的距离等于 20px，来到了粘性边界，继续往下滚动，<code>nav</code> 就会粘在约束物 <code>.box</code> 的内部，跟着容器滚动而同步滚动，产生粘性效果。</li>
+<li>继续往下滚动最终 <code>nav</code> 会接触到约束物 <code>.box</code> 的底部。</li>
+<li>若继续往下滚动，由于约束物约束了被粘物体只能在内部产生粘性效果，<code>nav</code> 只能跟着 <code>.box</code> 一起消失在滚动容器视区里。</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>css</tag>
+        <tag>position</tag>
+        <tag>sticky</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue-Vnode</title>
+    <url>/2019/08/05/Vue-Vnode/</url>
+    <content><![CDATA[<p>Vnode 是 Vue 内部的核心数据结构，用来描述 DOM 及 Component 和其对应的各种状态，例如：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> elementVNode = &#123;</span><br><span class="line">  tag: <span class="string">'div'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    style: &#123;</span><br><span class="line">      width: <span class="string">'100px'</span>,</span><br><span class="line">      height: <span class="string">'100px'</span>,</span><br><span class="line">      backgroundColor: <span class="string">'red'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vnode-的创建"><a href="#Vnode-的创建" class="headerlink" title="Vnode 的创建"></a>Vnode 的创建</h3><a id="more"></a>
+
+<ol>
+<li>Vnode 是 render 函数的产物，不管是 Template 字符串还是单文件组件中的标签都会编译为 render 函数，在 mount 阶段将会组合并挂载为 DOM。</li>
+<li>Vnode 也可以手动创建，通过 createElement(h) 可以手动创建一个 Vnode 对象，组件的 render 函数就是调用这个方法创建 Vnode。</li>
+</ol>
+<h3 id="Vnode-的作用"><a href="#Vnode-的作用" class="headerlink" title="Vnode 的作用"></a>Vnode 的作用</h3><ol>
+<li>描述真实 DOM。</li>
+<li>描述抽象内容（组件，Fragment 等）。</li>
+<li>提高性能。在 patch 阶段可通过 Diff 算法减少 patch 范围，从而减少 DOM 操作，提高性能。</li>
+</ol>
+<h3 id="Vnode-的种类"><a href="#Vnode-的种类" class="headerlink" title="Vnode 的种类"></a>Vnode 的种类</h3><p><img src="/images/vnode-types.png" alt="vnode-types"></p>
+]]></content>
+      <categories>
+        <category>源码阅读</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue-computed</title>
+    <url>/2019/08/06/Vue-computed/</url>
+    <content><![CDATA[<p>computed 与 data 类似，在 init 阶段的 initState 中初始化的：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 遍历 computed，，为子项创建 watcher</span></span><br><span class="line">watchers[key] = <span class="keyword">new</span> Watcher(</span><br><span class="line">  vm,</span><br><span class="line">  getter || noop,</span><br><span class="line">  noop,</span><br><span class="line">  computedWatcherOptions</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>如果 key 不是 vm 的属性则会调用：</p>
+<a id="more"></a>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(key <span class="keyword">in</span> vm)) &#123;</span><br><span class="line">  defineComputed(vm, key, userDef)</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (key <span class="keyword">in</span> vm.$data) &#123;</span><br><span class="line">    warn(<span class="string">`The computed property "<span class="subst">$&#123;key&#125;</span>" is already defined in data.`</span>, vm)</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (vm.$options.props &amp;&amp; key <span class="keyword">in</span> vm.$options.props) &#123;</span><br><span class="line">    warn(<span class="string">`The computed property "<span class="subst">$&#123;key&#125;</span>" is already defined as a prop.`</span>, vm)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>defineComputed</code> 中通过 <code>defineProperty</code> 给 vm 添加对应 computed key 的 getter 和 setter。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineComputed</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  target: any,</span></span></span><br><span class="line"><span class="function"><span class="params">  key: string,</span></span></span><br><span class="line"><span class="function"><span class="params">  userDef: Object | Function</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> shouldCache = !isServerRendering()</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> userDef === <span class="string">'function'</span>) &#123;</span><br><span class="line">    sharedPropertyDefinition.get = shouldCache</span><br><span class="line">      ? createComputedGetter(key)</span><br><span class="line">      : userDef</span><br><span class="line">    sharedPropertyDefinition.set = noop</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    sharedPropertyDefinition.get = userDef.get</span><br><span class="line">      ? shouldCache &amp;&amp; userDef.cache !== <span class="literal">false</span></span><br><span class="line">        ? createComputedGetter(key)</span><br><span class="line">        : userDef.get</span><br><span class="line">      : noop</span><br><span class="line">    sharedPropertyDefinition.set = userDef.set</span><br><span class="line">      ? userDef.set</span><br><span class="line">      : noop</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</span><br><span class="line">      sharedPropertyDefinition.set === noop) &#123;</span><br><span class="line">    sharedPropertyDefinition.set = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      warn(</span><br><span class="line">        <span class="string">`Computed property "<span class="subst">$&#123;key&#125;</span>" was assigned to but it has no setter.`</span>,</span><br><span class="line">        <span class="keyword">this</span></span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(target, key, sharedPropertyDefinition)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用<code>createComputedGetter</code> 创建 getter。当 computed 被使用时将会调用该 getter：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createComputedGetter</span> (<span class="params">key</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">computedGetter</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> watcher = <span class="keyword">this</span>._computedWatchers &amp;&amp; <span class="keyword">this</span>._computedWatchers[key]</span><br><span class="line">    <span class="keyword">if</span> (watcher) &#123;</span><br><span class="line">      <span class="keyword">if</span> (watcher.dirty) &#123;</span><br><span class="line">        watcher.evaluate()</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (Dep.target) &#123;</span><br><span class="line">        watcher.depend()</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> watcher.value</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以：</p>
+<ol>
+<li>页面更新时 Dep.target 设置为<code>当前页面的 watcher</code>。</li>
+<li>引用 computed 值的地方会触发他的 getter，<code>createComputedGetter</code> 包装的函数就会被调用。</li>
+<li>此时若 dirty 则会使 computedWatcher.evaluate 调用，在计算 computed 的值时就会将这个 computed 的值依赖添加到 computedWatcher 中，同时依赖中也会将这个 computedWatcher 添加到它的 <strong>订阅者收集器</strong> 中。<blockquote>
+<p>computedWatcher.evaluate 执行时会备份当前的 Dep.target（<strong>渲染watcher</strong>），在获取 computed 值的过程中 Dep.target 会设置为 <strong>computedWatcher</strong>，当获取到 computed 的值后会恢复为 Dep.target（<strong>渲染watcher</strong>）。</p>
+</blockquote>
+</li>
+<li>执行 computedWatcher.depend() 时，Dep.target 为 <strong>渲染watcher</strong>，作用是把当前 <strong>computedWatcher</strong> 的依赖全部添加进 <strong>渲染watcher</strong>，依赖也会将 <strong>渲染watcher</strong> 添加到它的 <strong>订阅者收集器</strong> 中。<blockquote>
+<p>这步的作用是，当 <strong>computedWatcher</strong> 的依赖变化时直接通知页面更新（<strong>渲染watcher</strong>），而不是通过 computed 变化后再通知页面去更新，一步到位。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h4><p><img src="/images/computed-lifecicle.jpg" alt="流程图"></p>
+]]></content>
+      <categories>
+        <category>源码阅读</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue defineReactive</title>
+    <url>/2019/07/31/Vue-defineReactive/</url>
+    <content><![CDATA[<h2 id="大致执行过程"><a href="#大致执行过程" class="headerlink" title="大致执行过程"></a>大致执行过程</h2><h3 id="依赖收集"><a href="#依赖收集" class="headerlink" title="依赖收集"></a>依赖收集</h3><ol>
+<li>在 <code>initState</code> 时，调用 <code>initProps</code>，<code>initData</code> 等 init 方法，通过 Observer 添加 getter 和 setter。</li>
+<li>Observer 中调用 <code>defineReactive</code> 完成响应式对象初始化。</li>
+<li>在 DefineReactive 中设置 getter，并在 getter 中通过 dep.depend() 收集依赖。</li>
+</ol>
+<h3 id="建立观察者"><a href="#建立观察者" class="headerlink" title="建立观察者"></a>建立观察者</h3><ol>
+<li>mountComponent 时会建立一个 watcher。</li>
+<li>创建 watcher 时触发 updateComponent，从而触发组件依赖元素的 getter。</li>
+<li>触发各个元素 getter 中的依赖收集。Dep.target 设置为当前 watcher。</li>
+<li>Dep.target.addDep 会将各个元素依赖添加到当前 watcher。</li>
+<li>Dep.target.addDep 调用时也会调用 dep.addSub 将 watcher 添加到 dep 的观察者列表中。</li>
+</ol>
+<h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><ol>
+<li>当修改值时会触发元素的 setter。</li>
+<li>通过 dep.notify() 通知 watcher。</li>
+<li>在 watcher 的 update 中执行更新方法。</li>
+</ol>
+<a id="more"></a>
+
+<p>源码：defineReactive</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Define a reactive property on an Object.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  obj: Object,</span></span></span><br><span class="line"><span class="function"><span class="params">  key: string,</span></span></span><br><span class="line"><span class="function"><span class="params">  val: any,</span></span></span><br><span class="line"><span class="function"><span class="params">  customSetter?: ?Function,</span></span></span><br><span class="line"><span class="function"><span class="params">  shallow?: boolean</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> dep = <span class="keyword">new</span> Dep()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> property = <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, key)</span><br><span class="line">  <span class="keyword">if</span> (property &amp;&amp; property.configurable === <span class="literal">false</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// cater for pre-defined getter/setters</span></span><br><span class="line">  <span class="keyword">const</span> getter = property &amp;&amp; property.get</span><br><span class="line">  <span class="keyword">const</span> setter = property &amp;&amp; property.set</span><br><span class="line">  <span class="keyword">if</span> ((!getter || setter) &amp;&amp; <span class="built_in">arguments</span>.length === <span class="number">2</span>) &#123;</span><br><span class="line">    val = obj[key]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> childOb = !shallow &amp;&amp; observe(val)</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">get</span>: function reactiveGetter () &#123;</span><br><span class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</span><br><span class="line">      <span class="comment">// Dep.target 在 mountComponent 中设置</span></span><br><span class="line">      <span class="keyword">if</span> (Dep.target) &#123;</span><br><span class="line">        <span class="comment">// 收集依赖</span></span><br><span class="line">        dep.depend()</span><br><span class="line">        <span class="keyword">if</span> (childOb) &#123;</span><br><span class="line">          childOb.dep.depend()</span><br><span class="line">          <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</span><br><span class="line">            dependArray(value)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> value</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">set</span>: function reactiveSetter (newVal) &#123;</span><br><span class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</span><br><span class="line">      <span class="comment">/* eslint-disable no-self-compare */</span></span><br><span class="line">      <span class="keyword">if</span> (newVal === value || (newVal !== newVal &amp;&amp; value !== value)) &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">/* eslint-enable no-self-compare */</span></span><br><span class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; customSetter) &#123;</span><br><span class="line">        customSetter()</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// #7981: for accessor properties without setter</span></span><br><span class="line">      <span class="keyword">if</span> (getter &amp;&amp; !setter) <span class="keyword">return</span></span><br><span class="line">      <span class="keyword">if</span> (setter) &#123;</span><br><span class="line">        setter.call(obj, newVal)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        val = newVal</span><br><span class="line">      &#125;</span><br><span class="line">      childOb = !shallow &amp;&amp; observe(newVal)</span><br><span class="line">      <span class="comment">//当设置值时通知 dep</span></span><br><span class="line">      dep.notify()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源码：Dep </p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> type Watcher <span class="keyword">from</span> <span class="string">'./watcher'</span></span><br><span class="line"><span class="keyword">import</span> &#123; remove &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> uid = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义可观测对象，允许多次订阅</span></span><br><span class="line"><span class="comment"> * 是响应式的核心部分</span></span><br><span class="line"><span class="comment"> * 在对象 getter 中调用来观测对象元素</span></span><br><span class="line"><span class="comment"> * 实际上是对 watcher 的管理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Dep</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> target: ?Watcher;</span><br><span class="line">  id: number;</span><br><span class="line">  subs: <span class="built_in">Array</span>&lt;Watcher&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span> () &#123;</span><br><span class="line">    <span class="keyword">this</span>.id = uid++</span><br><span class="line">    <span class="keyword">this</span>.subs = []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 在 watcher 中调用了此方法，用来收集订阅者</span></span><br><span class="line"><span class="comment">   * </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  addSub (sub: Watcher) &#123;</span><br><span class="line">    <span class="comment">// 记录观察者</span></span><br><span class="line">    <span class="keyword">this</span>.subs.push(sub)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  removeSub (sub: Watcher) &#123;</span><br><span class="line">    remove(<span class="keyword">this</span>.subs, sub)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 在对象元素的 getter 中调用</span></span><br><span class="line"><span class="comment">   * 由于 mountComponent 时添加了 watcher</span></span><br><span class="line"><span class="comment">   * 在 Watcher 的 constructor 中：</span></span><br><span class="line"><span class="comment">   * 1. 将此 watcher 设置为了 Dep.target，</span></span><br><span class="line"><span class="comment">   * 2. 执行表达式，触发表达式依赖元素的 getter</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  depend () &#123;</span><br><span class="line">    <span class="keyword">if</span> (Dep.target) &#123;</span><br><span class="line">      <span class="comment">// 添加当前依赖到 watcher</span></span><br><span class="line">      Dep.target.addDep(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  notify () &#123;</span><br><span class="line">    <span class="comment">// stabilize the subscriber list first</span></span><br><span class="line">    <span class="keyword">const</span> subs = <span class="keyword">this</span>.subs.slice()</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = subs.length; i &lt; l; i++) &#123;</span><br><span class="line">      <span class="comment">// 设置值时会调用 watcher 的 update，执行 update 策略</span></span><br><span class="line">      subs[i].update()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * target 是当前活动的 watcher</span></span><br><span class="line"><span class="comment"> * 在使用中同一时间只有一个 watcher 被使用</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">Dep.target = <span class="literal">null</span></span><br><span class="line"><span class="keyword">const</span> targetStack = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">pushTarget</span> (<span class="params">_target: ?Watcher</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (Dep.target) targetStack.push(Dep.target)</span><br><span class="line">  Dep.target = _target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">popTarget</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  Dep.target = targetStack.pop()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>源码阅读</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue-nextTick</title>
+    <url>/2019/08/15/Vue-nextTick/</url>
+    <content><![CDATA[<p>在 Vue 中 nextTick 实际上是一个 microTask（在 2.5 中曾被替换为 macroTask 实现，2.6 中又恢复为 microTask），源码位于 <code>src/core/util/next-tick.js</code>，</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">nextTick</span> (<span class="params">cb?: Function, ctx?: Object</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> _resolve</span><br><span class="line">  callbacks.push(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (cb) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        cb.call(ctx)</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        handleError(e, ctx, <span class="string">'nextTick'</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (_resolve) &#123;</span><br><span class="line">      _resolve(ctx)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">if</span> (!pending) &#123;</span><br><span class="line">    pending = <span class="literal">true</span></span><br><span class="line">    timerFunc()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// $flow-disable-line</span></span><br><span class="line">  <span class="keyword">if</span> (!cb &amp;&amp; <span class="keyword">typeof</span> <span class="built_in">Promise</span> !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">      _resolve = resolve</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>如上，可看到，nextTick 会将回调函数放入 callbacks 数组，等到执行时会依次全部执行完。这是为什么 nextTick 能将更新合并，他将回调都添加到数组，等到主线程执行完成后即会同时处理 callbacks 中的回调。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Here we have async deferring wrappers using microtasks.</span></span><br><span class="line"><span class="comment">// In 2.5 we used (macro) tasks (in combination with microtasks).</span></span><br><span class="line"><span class="comment">// However, it has subtle problems when state is changed right before repaint</span></span><br><span class="line"><span class="comment">// (e.g. #6813, out-in transitions).</span></span><br><span class="line"><span class="comment">// Also, using (macro) tasks in event handler would cause some weird behaviors</span></span><br><span class="line"><span class="comment">// that cannot be circumvented (e.g. #7109, #7153, #7546, #7834, #8109).</span></span><br><span class="line"><span class="comment">// So we now use microtasks everywhere, again.</span></span><br><span class="line"><span class="comment">// A major drawback of this tradeoff is that there are some scenarios</span></span><br><span class="line"><span class="comment">// where microtasks have too high a priority and fire in between supposedly</span></span><br><span class="line"><span class="comment">// sequential events (e.g. #4521, #6690, which have workarounds)</span></span><br><span class="line"><span class="comment">// or even between bubbling of the same event (#6566).</span></span><br><span class="line"><span class="keyword">let</span> timerFunc</span><br><span class="line"></span><br><span class="line"><span class="comment">// The nextTick behavior leverages the microtask queue, which can be accessed</span></span><br><span class="line"><span class="comment">// via either native Promise.then or MutationObserver.</span></span><br><span class="line"><span class="comment">// MutationObserver has wider support, however it is seriously bugged in</span></span><br><span class="line"><span class="comment">// UIWebView in iOS &gt;= 9.3.3 when triggered in touch event handlers. It</span></span><br><span class="line"><span class="comment">// completely stops working after triggering a few times... so, if native</span></span><br><span class="line"><span class="comment">// Promise is available, we will use it:</span></span><br><span class="line"><span class="comment">/* istanbul ignore next, $flow-disable-line */</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Promise</span> !== <span class="string">'undefined'</span> &amp;&amp; isNative(<span class="built_in">Promise</span>)) &#123;</span><br><span class="line">  <span class="keyword">const</span> p = <span class="built_in">Promise</span>.resolve()</span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    p.then(flushCallbacks)</span><br><span class="line">    <span class="comment">// In problematic UIWebViews, Promise.then doesn't completely break, but</span></span><br><span class="line">    <span class="comment">// it can get stuck in a weird state where callbacks are pushed into the</span></span><br><span class="line">    <span class="comment">// microtask queue but the queue isn't being flushed, until the browser</span></span><br><span class="line">    <span class="comment">// needs to do some other work, e.g. handle a timer. Therefore we can</span></span><br><span class="line">    <span class="comment">// "force" the microtask queue to be flushed by adding an empty timer.</span></span><br><span class="line">    <span class="keyword">if</span> (isIOS) setTimeout(noop)</span><br><span class="line">  &#125;</span><br><span class="line">  isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isIE &amp;&amp; <span class="keyword">typeof</span> MutationObserver !== <span class="string">'undefined'</span> &amp;&amp; (</span><br><span class="line">  isNative(MutationObserver) ||</span><br><span class="line">  <span class="comment">// PhantomJS and iOS 7.x</span></span><br><span class="line">  MutationObserver.toString() === <span class="string">'[object MutationObserverConstructor]'</span></span><br><span class="line">)) &#123;</span><br><span class="line">  <span class="comment">// Use MutationObserver where native Promise is not available,</span></span><br><span class="line">  <span class="comment">// e.g. PhantomJS, iOS7, Android 4.4</span></span><br><span class="line">  <span class="comment">// (#6466 MutationObserver is unreliable in IE11)</span></span><br><span class="line">  <span class="keyword">let</span> counter = <span class="number">1</span></span><br><span class="line">  <span class="keyword">const</span> observer = <span class="keyword">new</span> MutationObserver(flushCallbacks)</span><br><span class="line">  <span class="keyword">const</span> textNode = <span class="built_in">document</span>.createTextNode(<span class="built_in">String</span>(counter))</span><br><span class="line">  observer.observe(textNode, &#123;</span><br><span class="line">    characterData: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    counter = (counter + <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">    textNode.data = <span class="built_in">String</span>(counter)</span><br><span class="line">  &#125;</span><br><span class="line">  isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> setImmediate !== <span class="string">'undefined'</span> &amp;&amp; isNative(setImmediate)) &#123;</span><br><span class="line">  <span class="comment">// Fallback to setImmediate.</span></span><br><span class="line">  <span class="comment">// Techinically it leverages the (macro) task queue,</span></span><br><span class="line">  <span class="comment">// but it is still a better choice than setTimeout.</span></span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setImmediate(flushCallbacks)</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// Fallback to setTimeout.</span></span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setTimeout(flushCallbacks, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这部分时用于产生一个 <strong>延迟</strong> 函数 <code>timerFunc</code>，依次判定 Promise/MutationObserver/setImmediate，若都不存在则会使用 setTimeout 来实现。从源码可看出，在没有原生 microTask 时会使用 macroTask。</p>
+<p>附常见异步任务方法：  </p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>微任务</td>
+<td>setTimeout <br> setInterval <br> setImmediate <br> script <br> MessageChannel</td>
+</tr>
+<tr>
+<td>宏任务</td>
+<td>Promise <br> MutationObserver <br> Object.observe(废弃) <br> process.nextTick（node）</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>源码阅读</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浅谈 DI(依赖注入)</title>
+    <url>/2020/11/27/DI/</url>
+    <content><![CDATA[<blockquote>
+<p>文章参考：<a href="https://zhuanlan.zhihu.com/p/311184005">https://zhuanlan.zhihu.com/p/311184005</a><br>项目参考：<a href="https://github.com/darukjs/daruk">darukjs</a> <a href="https://github.com/inversify/InversifyJS">InversifyJS</a></p>
+</blockquote>
+<p>依赖注入是 IoC(控制反转) 的一种实现方式，通过依赖注入可以动态的将某种依赖关系注入到对象中，而不用手动一个个实例化。<br>在依赖注入中，将实例化对象这个步骤交给外部（IoC 容器），即为控制反转。</p>
+<a id="more"></a>
+
+<h2 id="一-为什么需要依赖注入"><a href="#一-为什么需要依赖注入" class="headerlink" title="一. 为什么需要依赖注入"></a>一. 为什么需要依赖注入</h2><p>传统面向对象开发中，当两个类之间存在依赖关系时会直接在类的内部创建另一个的实例，导致两个类之间形成耦合关系。<br>实际情况往往多个类之间会存在交叉依赖关系，一个类会被多个其它类依赖。这时如果类的功能有修改，则可能需要把所有依赖该类的地方统统改一遍。</p>
+<p>如同上面解释的那样，<code>A</code> 和 <code>B</code> 两个类可能存在一种关系为 <code>A</code> 依赖于 <code>B</code>，例如：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  b: B;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="keyword">this</span>.b = <span class="keyword">new</span> B();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">const</span> a = <span class="keyword">new</span> A();</span><br></pre></td></tr></table></figure>
+
+<p>此时如果如果有一个新需求，需要 B 初始化时传入一个新的参数 <code>p</code>，此时 B 为：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    p: number;</span><br><span class="line">    <span class="keyword">constructor</span>(p: number) &#123;</span><br><span class="line">        <span class="keyword">this</span>.p = p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>B</code> 修改后那么所有实例化 <code>B</code> 的地方都需要添加参数。 <code>A</code> 构造函数中实例化 <code>B</code> 时也需要传入参数 <code>p</code>；<code>A</code> 中的 <code>p</code> 并非凭空生成，也需要实例化 <code>A</code> 时传入参数，再将参数传给 <code>B</code> 的构造函数。此时 <code>A</code> 为：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  b:B;</span><br><span class="line">  <span class="keyword">constructor</span>(p: number) &#123;</span><br><span class="line">    <span class="keyword">this</span>.b = <span class="keyword">new</span> B(p);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由上面的例子我们知道，修改 <code>B</code> 就需要修改 <code>A</code>，如果依赖层数很深则可能行程一条 <strong>修改链</strong>，由修改的那一层一直到表层。</p>
+<h2 id="二-怎么实现-IoC"><a href="#二-怎么实现-IoC" class="headerlink" title="二. 怎么实现 IoC"></a>二. 怎么实现 IoC</h2><ol>
+<li><p>怎么解耦<br> 上诉情况产生的原因是由于 <code>A</code> 需要 <code>B</code> 的实例，实现时选择直接在 <code>A</code> 中实例化 <code>B</code>，那么 <code>A</code> 实际上依赖的是 <code>B</code> 这个类（构造器）而非 <code>B</code> 的实例。<code>A</code> 并不关心 <code>B</code> 的实例在何时何地以何种方式构造出来。基于这个原因我们其实可以做以下改变：</p>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">  p: number;</span><br><span class="line">  <span class="keyword">constructor</span>(p: number) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  private b:B;</span><br><span class="line">  <span class="keyword">constructor</span>(b: B) &#123;</span><br><span class="line">    <span class="keyword">this</span>.b = b;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">const</span> b = <span class="keyword">new</span> B(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">const</span> a = <span class="keyword">new</span> A(b);</span><br></pre></td></tr></table></figure>
+
+<p> 这个例子中，我们将 <code>A</code>、<code>B</code> 各自独立的实例化，在 <code>A</code> 中直接传入 <code>B</code> 的实例，而非 <code>B</code> 的参数，这样当依赖项 <code>B</code> 有任何改变时，<code>A</code> 不需要做任何变化。</p>
+</li>
+<li><p>容器<br> 上面的例子里我们实现了将 <code>A</code> 和 <code>B</code> 解耦，<code>A</code> 不再因为 <code>B</code> 改变而改变了。但如果还有一个类需要 <code>B</code> 的话仍然需要再次实例化 <code>B</code>，这样的地方越多，那么我们维护 <code>B</code> 的成本也就越高。我们很容易可以想到，要是将所有的依赖都统一管理，使用的时候不去 <code>new</code> 实例，而是直接拿到已经 <code>new</code> 好的实例，就解决了这个问题。</p>
+<p> 先新建一个容器类：</p>
+ <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Container &#123;</span><br><span class="line">  instanceMap = <span class="keyword">new</span> Map()</span><br><span class="line"></span><br><span class="line">  bind(id: <span class="built_in">string</span>, clazz: <span class="built_in">any</span>, constructorArgs: <span class="built_in">Array</span>&lt;<span class="built_in">any</span>&gt;) &#123;</span><br><span class="line">    <span class="keyword">this</span>.instanceMap.set(id, &#123;</span><br><span class="line">      clazz,</span><br><span class="line">      constructorArgs</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">get</span>&lt;T&gt;(id: <span class="built_in">string</span>): T &#123;</span><br><span class="line">    <span class="keyword">const</span> target = <span class="keyword">this</span>.instanceMap.get(id);</span><br><span class="line">    <span class="keyword">const</span> &#123; clazz, constructorArgs &#125; = target;</span><br><span class="line">    <span class="keyword">const</span> inst = Reflect.construct(clazz, constructorArgs); <span class="comment">// Reflect.construct 类似 new 操作符</span></span><br><span class="line">    <span class="keyword">return</span> inst</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Container()</span><br></pre></td></tr></table></figure>
+
+<p> 原来 <code>A</code>、<code>B</code> 的代码即可改为：</p>
+ <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="keyword">class</span> B &#123;</span><br><span class="line">  p: <span class="built_in">number</span>;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">p: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="keyword">class</span> A &#123;</span><br><span class="line">  <span class="keyword">private</span> b:B;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.b = container.get(<span class="string">'b'</span>); <span class="comment">// 此处通过容器注入</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">import</span> container <span class="keyword">from</span> <span class="string">'./container.ts'</span></span><br><span class="line"><span class="comment">// 绑定到容器</span></span><br><span class="line">container.bind(<span class="string">'a'</span>, A);</span><br><span class="line">container.bind(<span class="string">'b'</span>, B, [<span class="number">10</span>]);</span><br></pre></td></tr></table></figure>
+
+<p> 到此我们实现了一个容器，通过容器实现类和类之间的解耦。从功能上说，上面的实现就是一种 IoC，<br> 将实例化的过程交给容器实现，而非类内部。但整个实现过程还是略显复杂，类需要手动绑定到容器，<br> 依赖需要手动到容器上获取；如果这些步骤能自动实现，就能减少重复的代码，解放我们的双手。<br> 实际上大部分框架中的 DI（依赖注入）就是为了完成这件事。</p>
+</li>
+</ol>
+<h2 id="三-DI"><a href="#三-DI" class="headerlink" title="三. DI"></a>三. DI</h2><p>DI 即依赖注入，是 IoC 的一种实现方式，通过 DI，我们可以将依赖注入给调用方，不需要调用方主动去获取依赖。结合上文，为实现 DI，我们还需要完成以下两件事：</p>
+<ul>
+<li>需要将类自动绑定到容器。</li>
+<li>需自动将依赖注入到属性上（如例子中 <code>A</code> 需要关联 <code>B</code> 的实例）。</li>
+</ul>
+<p>针对问题 1，一般由两个方法，一是通过一个清单文件，将需要注入的类列举出来，然后框架统一注入到容器中。二是通过注解（装饰器）直接在类中标识，然后逐一注入到容器中——本例采用的方式。<br>针对问题 2，可以通过装饰器将容器收集到的类实例化到对应的对象属性上</p>
+<p>这里使用装饰器进行依赖注册及注入，这种方式在使用时更为方便，当增加新的类文件时完全不用做任何操作，可以自动完成类注册到容器。下面我们来完成一个 DI 实例：</p>
+<ol>
+<li><p>Reflect Metadata<br> 上面我们说 <strong>“针对问题一可以通过在类中标识，从而完成注入类到容器”</strong>，<code>Reflect Metadata</code> 即是用来标识类的。不止如此，我们将依赖注入到实例中时仍然需要它。<br> 简单点理解，<code>Reflect Metadata</code> 就是用来在某一对象上写入一些数据，但是这些数据不能直接读取出来，也不影响对象的正常使用，等到我们需要的时候又可以通过 <code>Reflect Metadata</code> 提供的一些方法读出来。</p>
+<p> 想了解更多可以参考 <a href="https://jkchao.github.io/typescript-book-chinese/tips/metadata.html">Reflect Metadata</a></p>
+</li>
+<li><p>Provide<br> <code>Provide</code> 用来解决上面提到的问题一。这是一个装饰器，用它标识的 class 将会自动绑定到容器中，下面是 Provide 的实现</p>
+<blockquote>
+<p>参考 <code>inversify-binding-decorators</code> 中 <code>Provide</code> 的简化实现</p>
+</blockquote>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> interfaces <span class="keyword">from</span> <span class="string">"./interfaces"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; METADATA_KEY &#125; <span class="keyword">from</span> <span class="string">"./constants"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">"reflect-metadata"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Provide</span>(<span class="params">serviceIdentifier: string, args?: Array&lt;any&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">target: any</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 当前 class 的信息</span></span><br><span class="line">    <span class="keyword">const</span> currentMetadata: interfaces.ProvideSyntax = &#123;</span><br><span class="line">      id: serviceIdentifier,</span><br><span class="line">      args: args || [],</span><br><span class="line">      clazz: target</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 已经收集的 class</span></span><br><span class="line">    <span class="keyword">const</span> previousMetadata: interfaces.ProvideSyntax[] = <span class="built_in">Reflect</span>.getMetadata(</span><br><span class="line">      METADATA_KEY.provide,</span><br><span class="line">      <span class="built_in">Reflect</span></span><br><span class="line">    ) || [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> newMetadata = [currentMetadata, ...previousMetadata];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将所有使用 Provide 装饰器标识的 class 都作为 Reflect 的元数据暂存</span></span><br><span class="line">    <span class="built_in">Reflect</span>.defineMetadata(</span><br><span class="line">      METADATA_KEY.provide,</span><br><span class="line">      newMetadata,</span><br><span class="line">      <span class="built_in">Reflect</span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 我们将所有需要绑定到容器的类都用 <code>@Provide</code> 去标记，收集并记录到 Reflect 对象中。如：</p>
+ <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Provide</span>(<span class="string">'b'</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> B &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">p: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 但到这里收集依赖的部分还没完成，因为类都定义在文件内的。我们需要一个方法将需要的文件一次性都 <code>require</code> 进来，让依赖注册生效（<code>@Provide</code>）。下面的 <code>binding</code> 方法就是完成这件事，我们需要在应用的生命周期初始化阶段去手动调用它：</p>
+<blockquote>
+<p>参考 <a href="https://github.com/darukjs/daruk/blob/2.0/src/core/daruk.ts">darukjs</a> 项目实现</p>
+</blockquote>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./container.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">binding</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 对目录没有限制，这里只是将常规目录作为示例</span></span><br><span class="line">  <span class="keyword">await</span> _loadFile(join(__dirname, <span class="string">'./middlewares'</span>));</span><br><span class="line">  <span class="keyword">await</span> _loadFile(join(__dirname, <span class="string">'./controllers'</span>));</span><br><span class="line">  <span class="keyword">await</span> _loadFile(join(__dirname, <span class="string">'./services'</span>));</span><br><span class="line">  container.load(buildProviderModule());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">_loadFile</span>(<span class="params">path: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> recursive(path).then(<span class="function">(<span class="params">files: <span class="built_in">Array</span>&lt;any&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> files</span><br><span class="line">      .filter(<span class="function">(<span class="params">file</span>) =&gt;</span> isJsTsFile(file))</span><br><span class="line">      .map(<span class="function">(<span class="params">file</span>) =&gt;</span> file.replace(JsTsReg, <span class="string">''</span>))</span><br><span class="line">      .forEach(<span class="function">(<span class="params">path: string</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">require</span>(path);</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;).catch(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 调用 binding 函数就会将 <code>middlewares</code>、<code>controllers</code>、<code>services</code> 目录中所有 <code>@Provide</code> 装饰的 class 都绑定到容器。<br> 这里还缺两块，Container 的 load 方法，还有 <code>buildProviderModule</code> 函数。</p>
+<p> <code>buildProviderModule</code> 函数就是为了从 Reflect 上拿到所有依赖项目。</p>
+<blockquote>
+<p><code>buildProviderModule</code> 参考 <code>inversify-binding-decorators</code> 的实现</p>
+</blockquote>
+ <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./container.ts</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 省略已实现的代码</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildProviderModule</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">bind: <span class="built_in">Function</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> provideMetadata: interfaces.ProvideSyntax[] = Reflect.getMetadata(METADATA_KEY.provide, Reflect) || [];</span><br><span class="line">    provideMetadata.map(<span class="function"><span class="params">metadata</span> =&gt;</span> bind(</span><br><span class="line">      metadata.id,</span><br><span class="line">      metadata.clazz,</span><br><span class="line">      metadata.args</span><br><span class="line">    ));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 上面代码中的核心就是 <code>Reflect.getMetadata(METADATA_KEY.provide, Reflect)</code>，对比 <code>Provide</code> 中的这部分</p>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Reflect</span>.defineMetadata(</span><br><span class="line">  METADATA_KEY.provide,</span><br><span class="line">  newMetadata,</span><br><span class="line">  <span class="built_in">Reflect</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p> 我们大致就能摸清依赖注册的原理，<code>@Provide</code> 通过 <code>Reflect.defineMetadata</code> 完成收集。 <code>buildProviderModule</code> 方法中通过 <code>Reflect.getMetadata</code> 拿到收集到的类交给 <code>container.load</code> 完成依赖注册。</p>
+<p> <code>Container.load</code> 如下：</p>
+ <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> Container &#123;</span><br><span class="line">  <span class="comment">// ...省略前面已实现的代码</span></span><br><span class="line">  <span class="keyword">public</span> load(register) &#123;</span><br><span class="line">    <span class="comment">// 注意，这里只是简化的例子</span></span><br><span class="line">    register(<span class="keyword">this</span>.bind)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Inject<br> 前一步我们完成了依赖注册，将所有 <code>待依赖</code> 的 class 都在 container 中保存起来。接下来就是最后一步：在需要依赖的地方注入依赖项。<br> 我们要做到的就是在类初始化时能自动拿到依赖对象的实例，不需要在依赖对象初始化时传参。我们已经将所有相关类都注册到 container 中，要使用某个类时，只要将 container 中对应的类实例化给相应属性即可。有了上面 Provide 的经验我们很容易就可以想到，通过装饰器很容易办到。</p>
+ <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./inject.ts</span></span><br><span class="line"><span class="keyword">import</span> container <span class="keyword">from</span> <span class="string">'./container'</span></span><br><span class="line"><span class="keyword">const</span> INJECTION = <span class="built_in">Symbol</span>.for(<span class="string">"INJECTION"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Inject</span>(<span class="params">serviceIdentifier: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">proto: any, key: string</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> resolve = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 从 container 中取值</span></span><br><span class="line">      <span class="keyword">return</span> container.get(serviceIdentifier);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// 缓存值</span></span><br><span class="line">      <span class="keyword">if</span> (!<span class="built_in">Reflect</span>.hasMetadata(INJECTION, <span class="keyword">this</span>, key)) &#123;</span><br><span class="line">        <span class="built_in">Reflect</span>.defineMetadata(INJECTION, resolve(), <span class="keyword">this</span>, key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">Reflect</span>.hasMetadata(INJECTION, <span class="keyword">this</span>, key)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.getMetadata(INJECTION, <span class="keyword">this</span>, key);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> resolve();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">setter</span>(<span class="params">newVal: any</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">Reflect</span>.defineMetadata(INJECTION, newVal, <span class="keyword">this</span>, key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(proto, key, &#123;</span><br><span class="line">      configurable: <span class="literal">true</span>,</span><br><span class="line">      enumerable: <span class="literal">true</span>,</span><br><span class="line">      <span class="keyword">get</span>: getter,</span><br><span class="line">      <span class="keyword">set</span>: setter</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <code>Inject</code> 通过设置属性的 getter 和 setter 拦截属性的获取和设置。获取时从 container 中拿到依赖对应依赖，设置时则替换当前依赖的缓存值，等到下次获取时使用这个设置的新值。</p>
+<p> 经过上面的设置，原来 <code>A</code>、<code>B</code> 的例子即可改为：</p>
+ <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 全局共用</span></span><br><span class="line"><span class="keyword">const</span> container = <span class="keyword">new</span> Container();</span><br><span class="line"><span class="comment">// ./services/b.ts</span></span><br><span class="line"><span class="meta">@Proivde</span>(<span class="string">'b'</span>, [<span class="number">10</span>])</span><br><span class="line"><span class="keyword">class</span> B &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">p: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ./services/a.ts</span></span><br><span class="line"><span class="meta">@Proivde</span>(<span class="string">'a'</span>)</span><br><span class="line"><span class="keyword">class</span> A &#123;</span><br><span class="line">  <span class="meta">@Inject</span>(<span class="string">'b'</span>)</span><br><span class="line">  <span class="keyword">private</span> b:B;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ./main.ts</span></span><br><span class="line">binding()</span><br><span class="line"><span class="built_in">console</span>.log(container.get(<span class="string">'a'</span>));  <span class="comment">// =&gt; A &#123; b: B &#123; p: 10 &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h3><p>IoC 最早运用在后端服务上，随着时间的推移，像 Angular 这样的优秀框架实现了前端的 IoC，也给前端提出了新要求。技术思想是不分前后端的，不管是 MVC、IoC、AOP 抑或是别的，这些业界的经典设计，是一个在前后端都通用的思想或范式。我们不能给自己的技术设限，优秀的思想永远都是学习的目标。</p>
+<p>前端在近些年日新月异，我们需要拥抱变化，融入变化；在未知的技术面前虚心学习是技术进阶的必经之路。</p>
+<h3 id="相关示例"><a href="#相关示例" class="headerlink" title="相关示例"></a>相关示例</h3><p>. <a href="https://gitee.com/lei2jun/di-example">di-example</a></p>
+]]></content>
+      <tags>
+        <tag>原理</tag>
+        <tag>DI</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git内部存储原理</title>
+    <url>/2020/03/30/Git/</url>
+    <content><![CDATA[<p>转载源：<a href="https://zhaohuabing.com/post/2019-01-21-git/">Git内部存储原理</a></p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#Git-目录结构">Git 目录结构</a><ul>
+<li><a href="#Git-目录结构">Git 目录结构</a></li>
+<li><a href="#Git-object存储方式">Git Object存储方式</a></li>
+<li><a href="#总结">总结</a></li>
+</ul>
+</li>
+<li><a href="#参考">参考</a></li>
+</ul>
+<p>Git是程序员工作中使用频率非常高的工具，要提高日常的工作效率，就需要熟练掌握Git的使用方法。相对于传统的版本控制系统而言，Git更为强大和灵活，其各种命令和命令参数也非常多，如果不了解Git的内部原理，要把Git使用得顺手的话非常困难。本文将用一个具体的例子来帮助理解Git的内部存储原理,加深对Git的理解，从掌握各种Git命令，以在使用Git进行工作时得心应手。</p>
+<a id="more"></a>
+
+<h1 id="Git-目录结构"><a href="#Git-目录结构" class="headerlink" title="Git 目录结构"></a>Git 目录结构</h1><p>Git的本质是一个文件系统，其工作目录中的所有文件的历史版本以及提交记录(Commit)都是以文件对象的方式保存在.git目录中的。</p>
+<p>首先创建一个work目录，并采用git init命令初始化git仓库。该命令会在工作目录下生成一个.git目录，该目录将用于保存工作区中所有的文件历史的历史版本，提交记录，branch，tag等信息。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir work</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> work</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git init</span></span><br></pre></td></tr></table></figure>
+
+<p>其目录结构如下：</p>
+<pre><code>├── branches             不这么重要，暂不用管                    
+├── config               git配置信息，包括用户名，email，remote repository的地址，本地branch和remote
+|                        branch的follow关系
+├── description          该git库的描述信息，如果使用了GitWeb的话，该描述信息将会被显示在该repo的页面上
+├── HEAD                 工作目录当前状态对应的commit，一般来说是当前branch的head，HEAD也可以通过git checkout 命令被直接设置到一个特定的commit上，这种情况被称之为 detached HEAD      
+├── hooks                钩子程序，可以被用于在执行git命令时自动执行一些特定操作，例如加入changeid
+│   ├── applypatch-msg.sample
+│   ├── commit-msg.sample
+│   ├── post-update.sample
+│   ├── pre-applypatch.sample
+│   ├── pre-commit.sample
+│   ├── prepare-commit-msg.sample
+│   ├── pre-push.sample
+│   ├── pre-rebase.sample
+│   └── update.sample
+├── info                不这么重要，暂不用管
+│   └── exclude
+├── objects             保存git对象的目录，包括三类对象commit,tag, tree和blob
+│   ├── info
+│   └── pack
+└── refs                保存branch和tag对应的commit
+    ├── heads           branch对应的commit
+    └── tags            tag对应的commit</code></pre><h2 id="Git-Object存储方式"><a href="#Git-Object存储方式" class="headerlink" title="Git Object存储方式"></a>Git Object存储方式</h2><p>目前objects目录中还没有任何内容，我们创建一个文件并提交。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"my project"</span> &gt; README</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"hello world"</span> &gt; src/file1.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -sm <span class="string">"init commit"</span></span></span><br><span class="line">[master (root-commit) b767d71] init commit</span><br><span class="line">    2 files changed, 2 insertions(+)</span><br><span class="line">    create mode 100644 README</span><br><span class="line">    create mode 100644 src/file1.txt</span><br></pre></td></tr></table></figure>
+
+<p>从打印输出可以看到，上面的命令创建了一个commit对象，该commit包含两个文件。 查看.git/objects目录，可以看到该目录下增加了5个子目录 06，3b， 82， b7， ca，每个子目录下有一个以一长串字母数字命令的文件。</p>
+<pre><code>.git/objects
+├── 06
+│   └── 5bcad11008c5e958ff743f2445551e05561f59
+├── 3b
+│   └── 18e512dba79e4c8300dd08aeb37f8e728b8dad
+├── 82
+│   └── 424451ac502bd69712561a524e2d97fd932c69
+├── b7
+│   └── 67d7115ef57666c9d279c7acc955f86f298a8d
+├── ca
+│   └── 964f37599d41e285d1a71d11495ddc486b6c3b
+├── info
+└── pack</code></pre><p>说明：Git Object目录中存储了三种对象：Commit， tree和blob。Git为对象生成一个文件，并根据文件信息生成一个 SHA-1 哈希值作为文件内容的校验和，创建以该校验和前两个字符为名称的子目录，并以 (校验和) 剩下 38 个字符为文件命名 ，将该文件保存至子目录下。</p>
+<h3 id="查看Git-Object存储内容"><a href="#查看Git-Object存储内容" class="headerlink" title="查看Git Object存储内容"></a>查看Git Object存储内容</h3><p>通过 <code>git cat-file</code>命令可以查看Git Object中存储的内容及对象类型，命令参数为Git Object的SHA-1哈希值，即目录名+文件名。在没有歧义的情况下，不用输入整个Hash，输入前几位即可。</p>
+<p>当前分支的对象引用保存在HEAD文件中，可以查看该文件得到当前HEAD对应的branch，并通过branch查到对应的commit对象。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat .git/HEAD</span></span><br><span class="line">ref: refs/heads/master</span><br><span class="line">cat .git/refs/heads/master</span><br><span class="line">b767d7115ef57666c9d279c7acc955f86f298a8d</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 -t 参数查看文件类型：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -t b767d7</span></span><br><span class="line">commit</span><br></pre></td></tr></table></figure>
+
+<p>使用 -p 参数可以查看文件内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p b767d7</span></span><br><span class="line">tree ca964f37599d41e285d1a71d11495ddc486b6c3b</span><br><span class="line">author Huabing Zhao &lt;zhaohuabing@gmail.com&gt; 1548055516 +0800</span><br><span class="line">committer Huabing Zhao &lt;zhaohuabing@gmail.com&gt; 1548055516 +0800</span><br><span class="line"></span><br><span class="line">init commit</span><br><span class="line"></span><br><span class="line">Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出这是一个commit对象，commit对象中保存了commit的作者，commit的描述信息，签名信息以及该commit中包含哪些tree对象和blob对象。</p>
+<p>b767d7这个commit中保存了一个tree对象，可以把该tree对象看成这次提交相关的所有文件的根目录。让我们来看看该tree对象中的内容。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p ca964f</span></span><br><span class="line">100644 blob 065bcad11008c5e958ff743f2445551e05561f59    README</span><br><span class="line">040000 tree 82424451ac502bd69712561a524e2d97fd932c69    src</span><br></pre></td></tr></table></figure>
+
+<p>可以看到该tree对象中包含了一个blob对象，即README文件；和一个tree对象，即src目录。 分别查看该blob对象和tree对象，其内容如下：  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 065bca</span></span><br><span class="line">my project</span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 824244</span></span><br><span class="line">100644 blob 3b18e512dba79e4c8300dd08aeb37f8e728b8dad    file1.txt</span><br></pre></td></tr></table></figure>
+
+<p>查看file1.txt的内容。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 3b18e51</span></span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
+
+<p>从上面的实验我们可以得知，git中存储了三种类型的对象，commit，tree和blob。分别对应git commit，此commit中的目录和文件。这些对象之间的关系如下图所示。</p>
+<pre><code>HEAD---&gt; refs/heads/master--&gt; b767d7(commit)
+                                    +
+                                    |
+                                    v
+                                ca964f(tree)
+                                    +
+                                    |
+                          +---------+----------+
+                          |                    |
+                          v                    v
+                     065bca(blob)         824244(tree)
+                          README              src
+                                               +
+                                               |
+                                               v
+                                          3b18e5(blob)
+                                             file1.txt                                     </code></pre><h3 id="Git-branch和tag"><a href="#Git-branch和tag" class="headerlink" title="Git branch和tag"></a>Git branch和tag</h3><p>从refs/heads/master的内容可以看到，branch是一个指向commit的指针，master branch实际是指向了b767d7这个commit。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b work</span></span><br><span class="line">Switched to a new branch 'work'</span><br><span class="line"><span class="meta">$</span><span class="bash"> tree .git/refs/</span></span><br><span class="line">.git/refs/</span><br><span class="line">├── heads</span><br><span class="line">│   ├── master</span><br><span class="line">│   └── work</span><br><span class="line">└── tags</span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/refs/heads/work .git/refs/heads/master</span></span><br><span class="line">b767d7115ef57666c9d279c7acc955f86f298a8d</span><br><span class="line">b767d7115ef57666c9d279c7acc955f86f298a8d</span><br></pre></td></tr></table></figure>
+
+<p>上面的命令创建了一个work branch。从其内容可以看到，该branch并没有创建任何新的版本文件，和master一样指向了b767d7这个commit。</p>
+<p>从上面的实验可以看出，一个branch其实只是一个commit对象的应用，Git并不会为每个branch存储一份拷贝，因此在git中创建branch几乎没有任何代价。</p>
+<p>在work branch上进行一些修改，然后提交。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"new line"</span> &gt;&gt; src/file1.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"do nothing"</span> &gt;&gt; Makefile</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -sm <span class="string">"some change"</span></span></span><br><span class="line">[work 4f73993] some change</span><br><span class="line">    2 files changed, 2 insertions(+)</span><br><span class="line">    create mode 100644 Makefile</span><br></pre></td></tr></table></figure>
+
+<p>查看当前的HEAD和branch内容。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat .git/HEAD</span></span><br><span class="line">ref: refs/heads/work</span><br><span class="line">huabing@huabing-xubuntu:~/work$ cat .git/refs/heads/work .git/refs/heads/master</span><br><span class="line">4f73993cf81931bc15375f0a23d82c40b3ae6789</span><br><span class="line">b767d7115ef57666c9d279c7acc955f86f298a8d</span><br></pre></td></tr></table></figure>
+
+<p>可以看到HEAD指向了work branch,而work branch则指向了4f73993这个commit，master branch指向的commit未变化，还是b767d7。</p>
+<p>查看4f73993这个commit对象的内容。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 4f73993</span></span><br><span class="line">tree 082b6d87eeddb15526b7c920e21f09f950f78b54</span><br><span class="line">parent b767d7115ef57666c9d279c7acc955f86f298a8d</span><br><span class="line">author Huabing Zhao &lt;zhaohuabing@gmail.com&gt; 1548069325 +0800</span><br><span class="line">committer Huabing Zhao &lt;zhaohuabing@gmail.com&gt; 1548069325 +0800</span><br><span class="line"></span><br><span class="line">some change</span><br><span class="line"></span><br><span class="line">Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到commit有一个parent字段，指向了前一个commi b767d7。该commit也包含了一个tree对象，让我们看看其中的内容。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">  git cat-file -p  082b6d</span></span><br><span class="line">100644 blob 8cc95f278445722c59d08bbd798fbaf60da8ca14    Makefile</span><br><span class="line">100644 blob 065bcad11008c5e958ff743f2445551e05561f59    README</span><br><span class="line">040000 tree 9aeacd1fa832ca167b0f72fb1d0c744a9ee1902f    src</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 9aeacd</span></span><br><span class="line">100644 blob 79ee69e841a5fd382faef2be2f2eb6e836cc980a    file1.txt</span><br></pre></td></tr></table></figure>
+
+<p>可以看到该tree对象中包含了该版本的所有文件和目录，由于README没有变化，还是指向的065bca这个blob对象。Makefile是一个新建的blob对象，src和file1.txt则指向了新版本的对象。</p>
+<p>增加了这次commit后，git中各个对象的关系如下图所示：</p>
+<pre><code>                                          (parent)
+HEAD--&gt; refs/heads/work--&gt; 4f7399(commit) +-------&gt; b767d7(commit)&lt;---refs/heads/master
+                              +                             +
+                              |                             |
+                              v                             v
+                         082b6d(tree)                   ca964f(tree)
+                              +                             +
+                              |                             |
+               +-----------------------------+     +--------+-----------+
+               |              |              |     |                    |
+               v              v              v     v                    v
+           9aeacd(tree)    8cc95f(blob)    065bca(blob)            824244(tree)
+         src (version 2)    Makefile         README               src (version 1)
+               +                                                        +
+               |                                                        |
+               v                                                        v
+          79ee69(blob)                                             3b18e5(blob)
+        file1.txt (version 2)                                    file1.txt (version 1)</code></pre><p>从上图可以看到，Git会为每次commit时修改的目录/文件生成一个新的版本的tree/blob对象，如果文件没有修改，则会指向老版本的tree/blob对象。而branch则只是指向某一个commit的一个指针。即Git中整个工作目录的version是以commit对象的形式存在的，可以认为一个commit就是一个version，而不同version可以指向相同或者不同的tree和blob对象，对应到不同版本的子目录和文件。如果某一个子目录/文件在版本间没有变化，则不会为该子目录/文件生成新的tree/blob对象，不同version的commit对象会指向同一个tree/object对象。</p>
+<p>Tag和branch类似，也是指向某个commit的指针。不同的是tag创建后其指向的commit不能变化，而branch创建后，其指针会在提交新的commit后向前移动。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git tag v1.0</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/refs/tags/v1.0 .git/refs/heads/work</span></span><br><span class="line">4f73993cf81931bc15375f0a23d82c40b3ae6789</span><br><span class="line">4f73993cf81931bc15375f0a23d82c40b3ae6789</span><br></pre></td></tr></table></figure>
+
+<p>可以看到新创建的v1.0 tag和work branch都是指向了4f7399这个commit。</p>
+<h3 id="Git-Stash实现原理"><a href="#Git-Stash实现原理" class="headerlink" title="Git Stash实现原理"></a>Git Stash实现原理</h3><p>Git stash的功能说明：经常有这样的事情发生，当你正在进行项目中某一部分的工作，里面的东西处于一个比较杂乱的状态，而你想转到其他分支上进行一些工作。问题是，你不想提交进行了一半的工作，否则以后你无法回到这个工作点。解决这个问题的办法就是git stash命令。</p>
+<p>“‘储藏”“可以获取你工作目录的中间状态——也就是你修改过的被追踪的文件和暂存的变更——并将它保存到一个未完结变更的堆栈中，随时可以重新应用。</p>
+<p>Git是如何实现Stash的呢？理解了Commit, Tree, Blog这三种Git存储对象，我们就可以很容易理解Git Stash的实现原理。因为和bransh及tag类似，Git Stash其实也是通过Commit来实现的。</p>
+<p>通过实验来测试一下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"another line"</span> &gt;&gt; src/file1.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的命令，我们在file1.txt中增加了一行，然后通过git stash命令将这些改动“暂存”在了一个“堆栈”中，让我们来看看.git目录发生了什么变化。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> tree .git/</span></span><br><span class="line">.git/</span><br><span class="line">├── branches</span><br><span class="line">├── COMMIT_EDITMSG</span><br><span class="line">├── config</span><br><span class="line">├── description</span><br><span class="line">├── HEAD</span><br><span class="line">├── hooks</span><br><span class="line">│   ├── applypatch-msg.sample</span><br><span class="line">│   ├── commit-msg.sample</span><br><span class="line">│   ├── post-update.sample</span><br><span class="line">│   ├── pre-applypatch.sample</span><br><span class="line">│   ├── pre-commit.sample</span><br><span class="line">│   ├── prepare-commit-msg.sample</span><br><span class="line">│   ├── pre-push.sample</span><br><span class="line">│   ├── pre-rebase.sample</span><br><span class="line">│   └── update.sample</span><br><span class="line">├── index</span><br><span class="line">├── info</span><br><span class="line">│   └── exclude</span><br><span class="line">├── logs</span><br><span class="line">│   ├── HEAD</span><br><span class="line">│   └── refs</span><br><span class="line">│       ├── heads</span><br><span class="line">│       │   ├── master</span><br><span class="line">│       │   └── work</span><br><span class="line">│       └── stash</span><br><span class="line">├── objects</span><br><span class="line">│   ├── 06</span><br><span class="line">│   │   └── 5bcad11008c5e958ff743f2445551e05561f59</span><br><span class="line">│   ├── 08</span><br><span class="line">│   │   └── 2b6d87eeddb15526b7c920e21f09f950f78b54</span><br><span class="line">│   ├── 11</span><br><span class="line">│   │   └── a6d1031e4fa2d4da0b6303dd74ed8e85c54057</span><br><span class="line">│   ├── 33</span><br><span class="line">│   │   └── f98923002cd224dabf32222c808611badd6d48</span><br><span class="line">│   ├── 3b</span><br><span class="line">│   │   └── 18e512dba79e4c8300dd08aeb37f8e728b8dad</span><br><span class="line">│   ├── 4f</span><br><span class="line">│   │   └── 73993cf81931bc15375f0a23d82c40b3ae6789</span><br><span class="line">│   ├── 6a</span><br><span class="line">│   │   ├── 1474c4da0653af0245970997b6fab0a0a7c1df</span><br><span class="line">│   │   └── d88760c3be94d8cb582bf2d06b99083d034428</span><br><span class="line">│   ├── 75</span><br><span class="line">│   │   └── e170cc1d928ae5a28547b4a3f2f3394a675b9a</span><br><span class="line">│   ├── 79</span><br><span class="line">│   │   └── ee69e841a5fd382faef2be2f2eb6e836cc980a</span><br><span class="line">│   ├── 82</span><br><span class="line">│   │   └── 424451ac502bd69712561a524e2d97fd932c69</span><br><span class="line">│   ├── 8c</span><br><span class="line">│   │   └── c95f278445722c59d08bbd798fbaf60da8ca14</span><br><span class="line">│   ├── 90</span><br><span class="line">│   │   └── c43dbb1e71c271510994d6b147c425cbffa673</span><br><span class="line">│   ├── 9a</span><br><span class="line">│   │   └── eacd1fa832ca167b0f72fb1d0c744a9ee1902f</span><br><span class="line">│   ├── b7</span><br><span class="line">│   │   └── 67d7115ef57666c9d279c7acc955f86f298a8d</span><br><span class="line">│   ├── ca</span><br><span class="line">│   │   └── 964f37599d41e285d1a71d11495ddc486b6c3b</span><br><span class="line">│   ├── e8</span><br><span class="line">│   │   └── 83e779eb08e2d9bca1fc1ee722fc80addac312</span><br><span class="line">│   ├── info</span><br><span class="line">│   └── pack</span><br><span class="line">├── ORIG_HEAD</span><br><span class="line">└── refs</span><br><span class="line">    ├── heads</span><br><span class="line">    │   ├── master</span><br><span class="line">    │   └── work</span><br><span class="line">    ├── stash</span><br><span class="line">    └── tags</span><br><span class="line">        └── v1.0</span><br></pre></td></tr></table></figure>
+
+<p>可以看到objects目录中增加了一些对象文件，refs中增加了一个stash文件。通过命令查看该文件内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat .git/refs/stash</span></span><br><span class="line">11a6d1031e4fa2d4da0b6303dd74ed8e85c54057</span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 11a6</span></span><br><span class="line">tree 90c43dbb1e71c271510994d6b147c425cbffa673</span><br><span class="line">parent 4f73993cf81931bc15375f0a23d82c40b3ae6789</span><br><span class="line">parent 6a1474c4da0653af0245970997b6fab0a0a7c1df</span><br><span class="line">author Huabing Zhao &lt;zhaohuabing@gmail.com&gt; 1548326421 +0800</span><br><span class="line">committer Huabing Zhao &lt;zhaohuabing@gmail.com&gt; 1548326421 +0800</span><br><span class="line"></span><br><span class="line">WIP on work: 4f73993 some change</span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 90c4</span></span><br><span class="line">100644 blob 8cc95f278445722c59d08bbd798fbaf60da8ca14    Makefile</span><br><span class="line">100644 blob 065bcad11008c5e958ff743f2445551e05561f59    README</span><br><span class="line">040000 tree 33f98923002cd224dabf32222c808611badd6d48    src</span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 33f9</span></span><br><span class="line">100644 blob 75e170cc1d928ae5a28547b4a3f2f3394a675b9a    file1.txt</span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 75e1</span></span><br><span class="line">hello world</span><br><span class="line">new line</span><br><span class="line">another line</span><br></pre></td></tr></table></figure>
+
+<p>从命令行输出可以看到,git stash实际上创建了一个新的commit对象11a6d1, 该commit对象的父节点为4f7399。commit对象中包含了修改后的file1.txt blob对象75e170。通过git log可以查看：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --oneline --graph stash@&#123;0&#125;</span></span><br><span class="line">*   f566001 WIP on work: 4f73993 some change</span><br><span class="line">|\</span><br><span class="line">| * 0796ced index on work: 4f73993 some change</span><br><span class="line">|/</span><br><span class="line">* 4f73993 some change</span><br><span class="line">* b767d71 init commit</span><br></pre></td></tr></table></figure>
+
+<p>备注：git stash生成的commit对象有两个parent，一个是前面一次git commit命令生成的commit，另一个对应于保存到stage中的commit。</p>
+<p>从该试验可以得知，git stash也是以commit，tree和object对象实现的。Git stash保存到“堆栈”中的修改其实一个commit对象。</p>
+<h3 id="Git-reset-实现原理"><a href="#Git-reset-实现原理" class="headerlink" title="Git reset 实现原理"></a>Git reset 实现原理</h3><p>在进行一些改动以后并通过git commit 将改动的代码提交到本地的repo后，如果你测试发现刚才的改动不合理，希望回退刚才的改动，应该如何处理？</p>
+<p>我们先提交一个错误的改动：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"I did something wrong"</span> &gt;&gt; src/file1.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -sm <span class="string">"This commit should not be there"</span></span></span><br><span class="line">[work ccbc363] This commit should not be there</span><br><span class="line">    1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
+<p>你可以通过git revert回退刚才的改动，或者修改代码后再次提交，但这样的话你的提交log会显得非常凌乱；如果不想把中间过程的commit push到远程仓库，可以通过git reset 回退刚才的改动。</p>
+<p>先查看目前的log</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span></span></span><br><span class="line">commit ccbc3638142191bd68454d47a0f67fd12519806b</span><br><span class="line">Author: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line">Date:   Fri Jan 25 12:35:31 2019 +0800</span><br><span class="line"></span><br><span class="line">    This commit should not be there</span><br><span class="line"></span><br><span class="line">    Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line"></span><br><span class="line">commit 4f73993cf81931bc15375f0a23d82c40b3ae6789</span><br><span class="line">Author: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line">Date:   Mon Jan 21 19:15:25 2019 +0800</span><br><span class="line"></span><br><span class="line">    some change</span><br><span class="line"></span><br><span class="line">    Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line"></span><br><span class="line">commit b767d7115ef57666c9d279c7acc955f86f298a8d</span><br><span class="line">Author: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line">Date:   Mon Jan 21 15:25:16 2019 +0800</span><br><span class="line"></span><br><span class="line">    init commit</span><br><span class="line"></span><br><span class="line">    Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br></pre></td></tr></table></figure>
+
+<p>通过 git reset回退到上一个commit。注意这里HEAD是一个指向当前branch最后一个commit指针，因此HEAD~1表示之前的一个commit。git reset命令也可以直接使用commit号作为命令参数。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git reset HEAD~1</span></span><br><span class="line">Unstaged changes after reset:</span><br><span class="line">M       src/file1.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span></span></span><br><span class="line">commit 4f73993cf81931bc15375f0a23d82c40b3ae6789</span><br><span class="line">Author: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line">Date:   Mon Jan 21 19:15:25 2019 +0800</span><br><span class="line"></span><br><span class="line">    some change</span><br><span class="line"></span><br><span class="line">    Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line"></span><br><span class="line">commit b767d7115ef57666c9d279c7acc955f86f298a8d</span><br><span class="line">Author: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br><span class="line">Date:   Mon Jan 21 15:25:16 2019 +0800</span><br><span class="line"></span><br><span class="line">    init commit</span><br><span class="line"></span><br><span class="line">    Signed-off-by: Huabing Zhao &lt;zhaohuabing@gmail.com&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到刚才的commit被回退了，但修改的文件还存在，处于Unstaged状态，你可以对这些文件进行改动后再次提交。</p>
+<p>如果你不想保留修改的文件，可以使用–hard参数直接回退到指定的commit，该参数会将HEAD指向该commit，并且工作区中的文件也会和该comit保持一致，该commit后的修改会被直接丢弃。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git reset HEAD --hard</span></span><br><span class="line">HEAD is now at 4f73993 some change</span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">On branch work</span><br><span class="line">nothing to commit, working directory clean</span><br></pre></td></tr></table></figure>
+
+<h2 id="Git-object存储方式"><a href="#Git-object存储方式" class="headerlink" title="Git object存储方式"></a>Git object存储方式</h2><p>Git object是通过下面的方式处理并存储在git内部的文件系统中的：</p>
+<ol>
+<li>首先创建一个header，header的值为 “对象类型 内容长度\0”</li>
+<li>将header和文件内容连接起来，计算得到其SHA-1 hash值</li>
+<li>将连接得到的内容采用zlib压缩</li>
+<li>将压缩后的内容写入到以 “hash值前两位命令的目录/hash值后38位命令的文件” 中</li>
+</ol>
+<p>可以通过Ruby手工创建一个 Git object 来验证上面的步骤。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> irb</span></span><br><span class="line">irb(main):001:0&gt; content = "what is up, doc?"                     //文件内容</span><br><span class="line">=&gt; "what is up, doc?"</span><br><span class="line">irb(main):002:0&gt; header = "blob #&#123;content.length&#125;\0"              //创建header</span><br><span class="line">=&gt; "blob 16\u0000"</span><br><span class="line">irb(main):003:0&gt; store = header + content                         //拼接header和文件内容</span><br><span class="line">=&gt; "blob 16\u0000what is up, doc?"</span><br><span class="line">irb(main):004:0&gt; require 'digest/sha1'</span><br><span class="line">=&gt; true</span><br><span class="line">irb(main):005:0&gt; sha1 = Digest::SHA1.hexdigest(store)</span><br><span class="line">=&gt; "bd9dbf5aae1a3862dd1526723246b20206e5fc37"                     //计算得到hash值</span><br><span class="line">irb(main):006:0&gt;  require 'zlib'</span><br><span class="line">=&gt; true</span><br><span class="line">irb(main):007:0&gt; zlib_content = Zlib::Deflate.deflate(store)      //压缩header+文件内容 </span><br><span class="line">=&gt; "x\x9CK\xCA\xC9OR04c(\xCFH,Q\xC8,V(-\xD0QH\xC9O\xB6\a\x00_\x1C\a\x9D"</span><br><span class="line">irb(main):008:0&gt;  path = '.git/objects/' + sha1[0,2] + '/' + sha1[2,38]</span><br><span class="line">=&gt; ".git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37"       //通过hash值计算文件存储路径</span><br><span class="line">irb(main):009:0&gt; require 'fileutils'</span><br><span class="line">=&gt; true</span><br><span class="line">irb(main):010:0&gt;  FileUtils.mkdir_p(File.dirname(path))           //写文件</span><br><span class="line">=&gt; [".git/objects/bd"]</span><br><span class="line">irb(main):011:0&gt; File.open(path, 'w') &#123; |f| f.write zlib_content &#125;</span><br><span class="line">=&gt; 32</span><br><span class="line">irb(main):012:0&gt;</span><br></pre></td></tr></table></figure>
+
+<p>文件以及写入到Git的内部存储中，我们尝试通过git cat-file 验证并读取该文件内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p bd9dbf5aae1a3862dd1526723246b20206e5fc37</span></span><br><span class="line">what is up, doc?</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，可以通过git cat-file文件读取该文件内容，因此该文件是一个合法的git object，和通过git 命令写入的文件格式相同。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Git围绕三种Object来实现了版本控制以及Branch，Tag等机制。</p>
+<ul>
+<li>Commit: Commit可以看作Git中一个Version的所有目录和文件的Snapshot，可以通过git checkout 查看任意一个commit中的内容。</li>
+<li>Tree: 目录对象，内部包含目录和文件</li>
+<li>Blob: 文件对象，对应一个文件</li>
+</ul>
+<p>理解了Git object的存储机制，就可以理解Git的各个命令的实现原理，更好地使用Git来实现源代码管理。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://git-scm.com/book/en/v2/Git-Internals-Git-Objects">https://git-scm.com/book/en/v2/Git-Internals-Git-Objects</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>git</tag>
+        <tag>原理</tag>
+        <tag>转载</tag>
+      </tags>
+  </entry>
+</search>
