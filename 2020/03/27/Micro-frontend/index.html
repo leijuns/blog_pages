@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.9.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>微前端 - Lei2jun Blog</title>
+
+
+    <meta name="description" content="技术圈是比较爱炒概念的，中台、微服务、DDD一时都变成比较热门的话题，微前端作为微服务的一种自然也免不了俗。在我看来，大多数情况下大多数公司都用不上微前端。当然微前端不是什么新技术，只是为了解决实际问题的一种方法。微前端这三个字听起来不明所以，实际上只是将项目打散，变成若干小项目的合集，使用一种方案使得在多个项目之前平滑切换的方法。">
+<meta name="keywords" content="微前端,micro frontend">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微前端">
+<meta property="og:url" content="https://blog.lei2jun.club/2020/03/27/Micro-frontend/index.html">
+<meta property="og:site_name" content="Lei2jun Blog">
+<meta property="og:description" content="技术圈是比较爱炒概念的，中台、微服务、DDD一时都变成比较热门的话题，微前端作为微服务的一种自然也免不了俗。在我看来，大多数情况下大多数公司都用不上微前端。当然微前端不是什么新技术，只是为了解决实际问题的一种方法。微前端这三个字听起来不明所以，实际上只是将项目打散，变成若干小项目的合集，使用一种方案使得在多个项目之前平滑切换的方法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://blog.lei2jun.club/images/thumbnails/micro-frontend.jpg">
+<meta property="og:updated_time" content="2023-03-27T05:02:21.159Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微前端">
+<meta name="twitter:description" content="技术圈是比较爱炒概念的，中台、微服务、DDD一时都变成比较热门的话题，微前端作为微服务的一种自然也免不了俗。在我看来，大多数情况下大多数公司都用不上微前端。当然微前端不是什么新技术，只是为了解决实际问题的一种方法。微前端这三个字听起来不明所以，实际上只是将项目打散，变成若干小项目的合集，使用一种方案使得在多个项目之前平滑切换的方法。">
+<meta name="twitter:image" content="https://blog.lei2jun.club/images/thumbnails/micro-frontend.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/logo.png" alt="微前端" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="/images/thumbnails/micro-frontend.jpg" alt="微前端">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-27T07:09:00.000Z">2020-03-27</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分钟 读完 (大约 1713 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                微前端
+            
+        </h1>
+        <div class="content">
+            <p>技术圈是比较爱炒概念的，中台、微服务、DDD一时都变成比较热门的话题，微前端作为微服务的一种自然也免不了俗。在我看来，大多数情况下大多数公司都用不上微前端。当然微前端不是什么新技术，只是为了解决实际问题的一种方法。微前端这三个字听起来不明所以，实际上只是将项目打散，变成若干小项目的合集，使用一种方案使得在多个项目之前平滑切换的方法。</p>
+<a id="more"></a>
+
+<h2 id="为什么需要微前端"><a href="#为什么需要微前端" class="headerlink" title="为什么需要微前端"></a>为什么需要微前端</h2><p>前面说过，大多数情况下我们是不需要微前端的，通过清晰的组件划分，部分情况下使用 iframe 嵌入就能解决绝大部分问题。但是微前端对下面的问题解决起来更有优势：</p>
+<ol>
+<li><p>迭代日积月累导致维护困难<br>一个生命周期超长的软件，必然产生出一个体积庞大的软件。软件会囊括各种交错复杂的业务逻辑，阅读维护起来特别困难。前端项目体积滋长还会使编译时间越来越长，本地开发热更新时电脑吃力，卡机。</p>
+</li>
+<li><p>技术栈多样性<br>公司在逐步扩大业务，永远有新的业务需要上线，永远有新的技术栈在尝试。庞大的单体软件很难同时运行多个技术栈，很难在业务中尝试使用新的技术，举步维艰。</p>
+</li>
+<li><p>跨团队开发<br>若同一项目交给多个团队同时开发，由于是同一项目同一仓库，团队开发的资源并没有隔离经常会导致代码冲突，互相影响业务功能，造成开发风险。</p>
+</li>
+</ol>
+<h3 id="技术方案"><a href="#技术方案" class="headerlink" title="技术方案"></a>技术方案</h3><ol>
+<li>iframe 嵌套多个子项目</li>
+<li>MPA 多子项目之前通过链接跳转</li>
+<li>整合多个子项目资源，由主项目动态导航不同的子项目</li>
+</ol>
+<p>这里重点介绍第三种</p>
+<h3 id="Single-SPA"><a href="#Single-SPA" class="headerlink" title="Single-SPA"></a>Single-SPA</h3><p>这种方案的重点是加载子应用资源，并根据路由进行资源导航，实现的方式市面上的工具各有不同<br>比较知名的开源方案有：</p>
+<ol>
+<li>Single-SPA</li>
+<li>Qiankun</li>
+<li>icestark</li>
+</ol>
+<p>qiankun 使用了 single-SPA 的路由系统，且实现了一个 sandbox，用来隔离 js 运行环境。icestark 是飞冰团队的微前端方案，整体思路和前两者也比较接近。这里以 single-SPA 介绍其实现思路。</p>
+<p>Single-SPA 将项目分为了主应用和子应用，主应用负责子应用导航，加载 JS、挂载应用等功能，而我们的主要业务代码放在子应用内。</p>
+<p>主应用注册子应用示例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; registerApplication, start &#125; <span class="keyword">from</span> <span class="string">"single-spa"</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> isActive <span class="keyword">from</span> <span class="string">"./activity-functions"</span>;</span><br><span class="line"></span><br><span class="line">registerApplication(</span><br><span class="line">  <span class="string">"@react-mf/navbar"</span>,</span><br><span class="line">  <span class="comment">// System.import 是 system.js 提供的异步导入 js 模块的方法</span></span><br><span class="line">  () =&gt; System.import(<span class="string">"@react-mf/navbar"</span>),</span><br><span class="line">  isActive.navbar</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">registerApplication(</span><br><span class="line">  <span class="string">"@react-mf/people"</span>,</span><br><span class="line">  () =&gt; System.import(<span class="string">"@react-mf/people"</span>),</span><br><span class="line">  isActive.people</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">registerApplication(</span><br><span class="line">  <span class="string">"@react-mf/planets"</span>,</span><br><span class="line">  () =&gt; System.import(<span class="string">"@react-mf/planets"</span>),</span><br><span class="line">  isActive.planets</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">start();</span><br></pre></td></tr></table></figure>
+
+<p>子应用导出示例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">"./set-public-path"</span>;</span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> singleSpaReact <span class="keyword">from</span> <span class="string">"single-spa-react"</span>;</span><br><span class="line"><span class="keyword">import</span> Root <span class="keyword">from</span> <span class="string">"./root.component"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> lifecycles = singleSpaReact(&#123;</span><br><span class="line">  React,</span><br><span class="line">  ReactDOM,</span><br><span class="line">  rootComponent: Root</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> bootstrap = lifecycles.bootstrap;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> mount = lifecycles.mount;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> unmount = lifecycles.unmount;</span><br></pre></td></tr></table></figure>
+
+<p>上面的两个代码示例介绍了 single-spa 的使用方法。那 single-spa 怎么实现微前端的呢？整体思路为：</p>
+<ol>
+<li><p>子应用导出生命周期函数<br>子应用需导出 <code>bootstrap</code>、<code>mount</code>、<code>unmount</code>、<code>update（可选）</code>函数，用于在 <code>single-spa</code> 生命周期中调用来挂载和卸载子应用</p>
+</li>
+<li><p>single-spa 提供 <code>registerApplication</code> 注册子应用。<br>该方法第二个参数 <code>applicationOrLoadingFn</code> 用于异步导入子应用的资源包，示例中使用了 system.js 提供的 import 方法导入，当然别的异步导入方法也是支持的，只要返回一个 Promise 就行。<br>该方法第三个参数 <code>activityFn</code> 用于确认是否激活该子应用。这是 single-spa 路由系统的关键，只有激活状态的子应用才会 mount。<br>方法调用后会生成一个 app 对象并将 name, applicationOrLoadingFn, activityFn 等参数挂载到 app。</p>
+</li>
+<li><p>调用 <code>reroute</code> 方法挂载应用<br>如果子应用还未调用 <code>start</code> 方法则会调用 <code>loadApps</code> 将所有激活状态（通过 activityFn）的子应用的 load 下来，并将子应用生命周期方法挂到 app 对象中。<br>否则，调用 <code>performAppChanges</code>。该方法会先后调用需激活的子应用的 bootstrap、mount 方法完成子组件的挂载。</p>
+</li>
+<li><p>监听 <code>hashchange</code>, <code>popstate</code> 事件拦截路由变化<br>路由变化时 single-spa 会重新调用 <code>reroute</code> 决定哪些子应用需要 unmount，哪些应用需要 mount。<br>不仅如此，还会重写 <code>window.addEventListener</code> 和 <code>window.removeEventListener</code> 拦截所有 <code>hashchange</code> 和 <code>popstate</code> 的事件注册，<br>使事件处理器在子应用在 single-spa 处理完子应用的 <code>load</code>、挂载或卸载之后才被调用。</p>
+</li>
+</ol>
+<h3 id="Single-SPA-与-Qiankun"><a href="#Single-SPA-与-Qiankun" class="headerlink" title="Single-SPA 与 Qiankun"></a>Single-SPA 与 Qiankun</h3><ol>
+<li><p>qiankun 实现了一个 JS sandbox，避免子应用之间的环境污染  </p>
+<p> 实现逻辑：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> rawWindow = <span class="built_in">window</span>;</span><br><span class="line"><span class="keyword">const</span> fakeWindow = <span class="built_in">Object</span>.create(<span class="literal">null</span>) <span class="keyword">as</span> Window;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sandbox: WindowProxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(fakeWindow, &#123;</span><br><span class="line">    <span class="keyword">set</span>(_: Window, p: PropertyKey, value: any): boolean &#123;</span><br><span class="line">      <span class="comment">// 省略...</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="keyword">get</span>(_: Window, p: PropertyKey): any &#123;</span><br><span class="line">      <span class="comment">// 省略...</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    has(_: Window, <span class="attr">p</span>: string | number | symbol): boolean &#123;</span><br><span class="line">      <span class="keyword">return</span> p <span class="keyword">in</span> rawWindow;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p> qiankun 通过 <code>Proxy</code> 拦截了 <code>fakeWindow</code> 对象，在使用他们编写的插件 <code>import-html-entry</code> load 子应用 js 时将其作为子应用的 window，并且每个子应用生成的对象都不同。这样，就实现了每个子应用的环境独立，避免变量污染。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// get the entry html content and script executor</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">template</span>: appContent, execScripts, assetPublicPath &#125; = <span class="keyword">await</span> importEntry(entry, &#123;</span><br><span class="line">    <span class="comment">// compose the config getTemplate function with default wrapper</span></span><br><span class="line">    getTemplate: flow(getTemplate, getDefaultTplWrapper(appName)),</span><br><span class="line">    ...settings,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//省略部分代码...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// get the lifecycle hooks from module exports</span></span><br><span class="line"><span class="keyword">let</span> &#123; <span class="attr">bootstrap</span>: bootstrapApp, mount, unmount &#125; = <span class="keyword">await</span> execScripts(jsSandbox);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>JS Entry</strong> vs <strong>HTML Entry</strong><br> qiankun 采用 HTML Entry 作为资源注入方式，single-SPA 采用 JS Entry 方式注入。</p>
+<p> JS Entry 方式要求主应用必须给子应用提供一个挂载的 DOM 节点；子应用需要将资源（js、css 等）打包到一个文件，或者打包时将所有子应用的资源路径单独保存配置，在主应用引用；</p>
+<p> HTML Entry 方式则不需要单独提供挂载点，也不需要单独处理资源加载的问题，无论是挂载点还是资源都在 HTML 中，都能一次性全部解析到。qiankun 拉取和解析 html 还是使用 <code>import-html-entry</code> 完成的。</p>
+</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/micro-frontend/">micro frontend</a>, <a class="has-link-grey -link" href="/tags/微前端/">微前端</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/30/Git/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Git内部存储原理</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/10/Sticky/">
+                <span class="level-item">CSS 粘性定位 position: sticky</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.lei2jun.club/2020/03/27/Micro-frontend/';
+        this.page.identifier = 'micro_frontend';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'lei2jun' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/site-avatar.png" alt="Lei2jun">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Lei2jun
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        三流程序员
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Shen zhen</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            1
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            14
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/lei2jun" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/lei2jun">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/源码阅读/">
+            <span class="level-start">
+                <span class="level-item">源码阅读</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/micro-frontend/" style="font-size: 10px;">micro frontend</a> <a href="/tags/mobx/" style="font-size: 10px;">mobx</a> <a href="/tags/position/" style="font-size: 10px;">position</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/sticky/" style="font-size: 10px;">sticky</a> <a href="/tags/tokenize/" style="font-size: 10px;">tokenize</a> <a href="/tags/vue/" style="font-size: 20px;">vue</a> <a href="/tags/原理/" style="font-size: 16.67px;">原理</a> <a href="/tags/微前端/" style="font-size: 10px;">微前端</a> <a href="/tags/转载/" style="font-size: 13.33px;">转载</a>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/27/DI/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/di.png" alt="浅谈 DI(依赖注入)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T08:00:00.000Z">2020-11-27</time></div>
+                    <a href="/2020/11/27/DI/" class="title has-link-black-ter is-size-6 has-text-weight-normal">浅谈 DI(依赖注入)</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/19/Node-max-header-size/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/nodejs.jpg" alt="如何设置 Node 的 header size">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-19T03:28:00.000Z">2020-11-19</time></div>
+                    <a href="/2020/11/19/Node-max-header-size/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何设置 Node 的 header size</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/04/14/Git-rebase/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git-rebase.png" alt="Git rebase 基础用法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T11:20:00.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/Git-rebase/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git rebase 基础用法</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/30/Git/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git.jpg" alt="Git内部存储原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-30T14:53:00.000Z">2020-03-30</time></div>
+                    <a href="/2020/03/30/Git/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git内部存储原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/27/Micro-frontend/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/micro-frontend.jpg" alt="微前端">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-27T07:09:00.000Z">2020-03-27</time></div>
+                    <a href="/2020/03/27/Micro-frontend/" class="title has-link-black-ter is-size-6 has-text-weight-normal">微前端</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/DI/">
+                        <span class="tag">DI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node/">
+                        <span class="tag">Node</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/css/">
+                        <span class="tag">css</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/micro-frontend/">
+                        <span class="tag">micro frontend</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mobx/">
+                        <span class="tag">mobx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/position/">
+                        <span class="tag">position</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react/">
+                        <span class="tag">react</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/sticky/">
+                        <span class="tag">sticky</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/tokenize/">
+                        <span class="tag">tokenize</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vue/">
+                        <span class="tag">vue</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/原理/">
+                        <span class="tag">原理</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/微前端/">
+                        <span class="tag">微前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/转载/">
+                        <span class="tag">转载</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/27/DI/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/di.png" alt="浅谈 DI(依赖注入)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T08:00:00.000Z">2020-11-27</time></div>
+                    <a href="/2020/11/27/DI/" class="title has-link-black-ter is-size-6 has-text-weight-normal">浅谈 DI(依赖注入)</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/19/Node-max-header-size/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/nodejs.jpg" alt="如何设置 Node 的 header size">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-19T03:28:00.000Z">2020-11-19</time></div>
+                    <a href="/2020/11/19/Node-max-header-size/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何设置 Node 的 header size</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/04/14/Git-rebase/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git-rebase.png" alt="Git rebase 基础用法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T11:20:00.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/Git-rebase/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git rebase 基础用法</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/30/Git/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git.jpg" alt="Git内部存储原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-30T14:53:00.000Z">2020-03-30</time></div>
+                    <a href="/2020/03/30/Git/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git内部存储原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/27/Micro-frontend/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/micro-frontend.jpg" alt="微前端">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-27T07:09:00.000Z">2020-03-27</time></div>
+                    <a href="/2020/03/27/Micro-frontend/" class="title has-link-black-ter is-size-6 has-text-weight-normal">微前端</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/DI/">
+                        <span class="tag">DI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node/">
+                        <span class="tag">Node</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/css/">
+                        <span class="tag">css</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/micro-frontend/">
+                        <span class="tag">micro frontend</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mobx/">
+                        <span class="tag">mobx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/position/">
+                        <span class="tag">position</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react/">
+                        <span class="tag">react</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/sticky/">
+                        <span class="tag">sticky</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/tokenize/">
+                        <span class="tag">tokenize</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vue/">
+                        <span class="tag">vue</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/原理/">
+                        <span class="tag">原理</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/微前端/">
+                        <span class="tag">微前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/转载/">
+                        <span class="tag">转载</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/logo.png" alt="微前端" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2023 Leijun&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                
+                <br>
+                <a href="http://beian.miit.gov.cn/" target="_blank">粤ICP备2023017688号-1</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://blog.lei2jun.club',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/z16.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

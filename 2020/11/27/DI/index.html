@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.9.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>浅谈 DI(依赖注入) - Lei2jun Blog</title>
+
+
+    <meta name="description" content="文章参考：https://zhuanlan.zhihu.com/p/311184005项目参考：darukjs InversifyJS  依赖注入是 IoC(控制反转) 的一种实现方式，通过依赖注入可以动态的将某种依赖关系注入到对象中，而不用手动一个个实例化。在依赖注入中，将实例化对象这个步骤交给外部（IoC 容器），即为控制反转。">
+<meta name="keywords" content="原理,DI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈 DI(依赖注入)">
+<meta property="og:url" content="https://blog.lei2jun.club/2020/11/27/DI/index.html">
+<meta property="og:site_name" content="Lei2jun Blog">
+<meta property="og:description" content="文章参考：https://zhuanlan.zhihu.com/p/311184005项目参考：darukjs InversifyJS  依赖注入是 IoC(控制反转) 的一种实现方式，通过依赖注入可以动态的将某种依赖关系注入到对象中，而不用手动一个个实例化。在依赖注入中，将实例化对象这个步骤交给外部（IoC 容器），即为控制反转。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://blog.lei2jun.club/images/thumbnails/di.png">
+<meta property="og:updated_time" content="2023-03-27T05:02:21.159Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈 DI(依赖注入)">
+<meta name="twitter:description" content="文章参考：https://zhuanlan.zhihu.com/p/311184005项目参考：darukjs InversifyJS  依赖注入是 IoC(控制反转) 的一种实现方式，通过依赖注入可以动态的将某种依赖关系注入到对象中，而不用手动一个个实例化。在依赖注入中，将实例化对象这个步骤交给外部（IoC 容器），即为控制反转。">
+<meta name="twitter:image" content="https://blog.lei2jun.club/images/thumbnails/di.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/logo.png" alt="浅谈 DI(依赖注入)" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="/images/thumbnails/di.png" alt="浅谈 DI(依赖注入)">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-11-27T08:00:00.000Z">2020-11-27</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 分钟 读完 (大约 2830 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                浅谈 DI(依赖注入)
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>文章参考：<a href="https://zhuanlan.zhihu.com/p/311184005">https://zhuanlan.zhihu.com/p/311184005</a><br>项目参考：<a href="https://github.com/darukjs/daruk">darukjs</a> <a href="https://github.com/inversify/InversifyJS">InversifyJS</a></p>
+</blockquote>
+<p>依赖注入是 IoC(控制反转) 的一种实现方式，通过依赖注入可以动态的将某种依赖关系注入到对象中，而不用手动一个个实例化。<br>在依赖注入中，将实例化对象这个步骤交给外部（IoC 容器），即为控制反转。</p>
+<a id="more"></a>
+
+<h2 id="一-为什么需要依赖注入"><a href="#一-为什么需要依赖注入" class="headerlink" title="一. 为什么需要依赖注入"></a>一. 为什么需要依赖注入</h2><p>传统面向对象开发中，当两个类之间存在依赖关系时会直接在类的内部创建另一个的实例，导致两个类之间形成耦合关系。<br>实际情况往往多个类之间会存在交叉依赖关系，一个类会被多个其它类依赖。这时如果类的功能有修改，则可能需要把所有依赖该类的地方统统改一遍。</p>
+<p>如同上面解释的那样，<code>A</code> 和 <code>B</code> 两个类可能存在一种关系为 <code>A</code> 依赖于 <code>B</code>，例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  b: B;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="keyword">this</span>.b = <span class="keyword">new</span> B();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">const</span> a = <span class="keyword">new</span> A();</span><br></pre></td></tr></table></figure>
+
+<p>此时如果如果有一个新需求，需要 B 初始化时传入一个新的参数 <code>p</code>，此时 B 为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    p: number;</span><br><span class="line">    <span class="keyword">constructor</span>(p: number) &#123;</span><br><span class="line">        <span class="keyword">this</span>.p = p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>B</code> 修改后那么所有实例化 <code>B</code> 的地方都需要添加参数。 <code>A</code> 构造函数中实例化 <code>B</code> 时也需要传入参数 <code>p</code>；<code>A</code> 中的 <code>p</code> 并非凭空生成，也需要实例化 <code>A</code> 时传入参数，再将参数传给 <code>B</code> 的构造函数。此时 <code>A</code> 为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  b:B;</span><br><span class="line">  <span class="keyword">constructor</span>(p: number) &#123;</span><br><span class="line">    <span class="keyword">this</span>.b = <span class="keyword">new</span> B(p);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由上面的例子我们知道，修改 <code>B</code> 就需要修改 <code>A</code>，如果依赖层数很深则可能行程一条 <strong>修改链</strong>，由修改的那一层一直到表层。</p>
+<h2 id="二-怎么实现-IoC"><a href="#二-怎么实现-IoC" class="headerlink" title="二. 怎么实现 IoC"></a>二. 怎么实现 IoC</h2><ol>
+<li><p>怎么解耦<br> 上诉情况产生的原因是由于 <code>A</code> 需要 <code>B</code> 的实例，实现时选择直接在 <code>A</code> 中实例化 <code>B</code>，那么 <code>A</code> 实际上依赖的是 <code>B</code> 这个类（构造器）而非 <code>B</code> 的实例。<code>A</code> 并不关心 <code>B</code> 的实例在何时何地以何种方式构造出来。基于这个原因我们其实可以做以下改变：</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">  p: number;</span><br><span class="line">  <span class="keyword">constructor</span>(p: number) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  private b:B;</span><br><span class="line">  <span class="keyword">constructor</span>(b: B) &#123;</span><br><span class="line">    <span class="keyword">this</span>.b = b;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">const</span> b = <span class="keyword">new</span> B(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">const</span> a = <span class="keyword">new</span> A(b);</span><br></pre></td></tr></table></figure>
+
+<p> 这个例子中，我们将 <code>A</code>、<code>B</code> 各自独立的实例化，在 <code>A</code> 中直接传入 <code>B</code> 的实例，而非 <code>B</code> 的参数，这样当依赖项 <code>B</code> 有任何改变时，<code>A</code> 不需要做任何变化。</p>
+</li>
+<li><p>容器<br> 上面的例子里我们实现了将 <code>A</code> 和 <code>B</code> 解耦，<code>A</code> 不再因为 <code>B</code> 改变而改变了。但如果还有一个类需要 <code>B</code> 的话仍然需要再次实例化 <code>B</code>，这样的地方越多，那么我们维护 <code>B</code> 的成本也就越高。我们很容易可以想到，要是将所有的依赖都统一管理，使用的时候不去 <code>new</code> 实例，而是直接拿到已经 <code>new</code> 好的实例，就解决了这个问题。</p>
+<p> 先新建一个容器类：</p>
+ <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Container &#123;</span><br><span class="line">  instanceMap = <span class="keyword">new</span> Map()</span><br><span class="line"></span><br><span class="line">  bind(id: <span class="built_in">string</span>, clazz: <span class="built_in">any</span>, constructorArgs: <span class="built_in">Array</span>&lt;<span class="built_in">any</span>&gt;) &#123;</span><br><span class="line">    <span class="keyword">this</span>.instanceMap.set(id, &#123;</span><br><span class="line">      clazz,</span><br><span class="line">      constructorArgs</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">get</span>&lt;T&gt;(id: <span class="built_in">string</span>): T &#123;</span><br><span class="line">    <span class="keyword">const</span> target = <span class="keyword">this</span>.instanceMap.get(id);</span><br><span class="line">    <span class="keyword">const</span> &#123; clazz, constructorArgs &#125; = target;</span><br><span class="line">    <span class="keyword">const</span> inst = Reflect.construct(clazz, constructorArgs); <span class="comment">// Reflect.construct 类似 new 操作符</span></span><br><span class="line">    <span class="keyword">return</span> inst</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Container()</span><br></pre></td></tr></table></figure>
+
+<p> 原来 <code>A</code>、<code>B</code> 的代码即可改为：</p>
+ <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.ts</span></span><br><span class="line"><span class="keyword">class</span> B &#123;</span><br><span class="line">  p: <span class="built_in">number</span>;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">p: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.ts</span></span><br><span class="line"><span class="keyword">class</span> A &#123;</span><br><span class="line">  <span class="keyword">private</span> b:B;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.b = container.get(<span class="string">'b'</span>); <span class="comment">// 此处通过容器注入</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">import</span> container <span class="keyword">from</span> <span class="string">'./container.ts'</span></span><br><span class="line"><span class="comment">// 绑定到容器</span></span><br><span class="line">container.bind(<span class="string">'a'</span>, A);</span><br><span class="line">container.bind(<span class="string">'b'</span>, B, [<span class="number">10</span>]);</span><br></pre></td></tr></table></figure>
+
+<p> 到此我们实现了一个容器，通过容器实现类和类之间的解耦。从功能上说，上面的实现就是一种 IoC，<br> 将实例化的过程交给容器实现，而非类内部。但整个实现过程还是略显复杂，类需要手动绑定到容器，<br> 依赖需要手动到容器上获取；如果这些步骤能自动实现，就能减少重复的代码，解放我们的双手。<br> 实际上大部分框架中的 DI（依赖注入）就是为了完成这件事。</p>
+</li>
+</ol>
+<h2 id="三-DI"><a href="#三-DI" class="headerlink" title="三. DI"></a>三. DI</h2><p>DI 即依赖注入，是 IoC 的一种实现方式，通过 DI，我们可以将依赖注入给调用方，不需要调用方主动去获取依赖。结合上文，为实现 DI，我们还需要完成以下两件事：</p>
+<ul>
+<li>需要将类自动绑定到容器。</li>
+<li>需自动将依赖注入到属性上（如例子中 <code>A</code> 需要关联 <code>B</code> 的实例）。</li>
+</ul>
+<p>针对问题 1，一般由两个方法，一是通过一个清单文件，将需要注入的类列举出来，然后框架统一注入到容器中。二是通过注解（装饰器）直接在类中标识，然后逐一注入到容器中——本例采用的方式。<br>针对问题 2，可以通过装饰器将容器收集到的类实例化到对应的对象属性上</p>
+<p>这里使用装饰器进行依赖注册及注入，这种方式在使用时更为方便，当增加新的类文件时完全不用做任何操作，可以自动完成类注册到容器。下面我们来完成一个 DI 实例：</p>
+<ol>
+<li><p>Reflect Metadata<br> 上面我们说 <strong>“针对问题一可以通过在类中标识，从而完成注入类到容器”</strong>，<code>Reflect Metadata</code> 即是用来标识类的。不止如此，我们将依赖注入到实例中时仍然需要它。<br> 简单点理解，<code>Reflect Metadata</code> 就是用来在某一对象上写入一些数据，但是这些数据不能直接读取出来，也不影响对象的正常使用，等到我们需要的时候又可以通过 <code>Reflect Metadata</code> 提供的一些方法读出来。</p>
+<p> 想了解更多可以参考 <a href="https://jkchao.github.io/typescript-book-chinese/tips/metadata.html">Reflect Metadata</a></p>
+</li>
+<li><p>Provide<br> <code>Provide</code> 用来解决上面提到的问题一。这是一个装饰器，用它标识的 class 将会自动绑定到容器中，下面是 Provide 的实现</p>
+<blockquote>
+<p>参考 <code>inversify-binding-decorators</code> 中 <code>Provide</code> 的简化实现</p>
+</blockquote>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> interfaces <span class="keyword">from</span> <span class="string">"./interfaces"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; METADATA_KEY &#125; <span class="keyword">from</span> <span class="string">"./constants"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">"reflect-metadata"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Provide</span>(<span class="params">serviceIdentifier: string, args?: Array&lt;any&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">target: any</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 当前 class 的信息</span></span><br><span class="line">    <span class="keyword">const</span> currentMetadata: interfaces.ProvideSyntax = &#123;</span><br><span class="line">      id: serviceIdentifier,</span><br><span class="line">      args: args || [],</span><br><span class="line">      clazz: target</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 已经收集的 class</span></span><br><span class="line">    <span class="keyword">const</span> previousMetadata: interfaces.ProvideSyntax[] = <span class="built_in">Reflect</span>.getMetadata(</span><br><span class="line">      METADATA_KEY.provide,</span><br><span class="line">      <span class="built_in">Reflect</span></span><br><span class="line">    ) || [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> newMetadata = [currentMetadata, ...previousMetadata];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将所有使用 Provide 装饰器标识的 class 都作为 Reflect 的元数据暂存</span></span><br><span class="line">    <span class="built_in">Reflect</span>.defineMetadata(</span><br><span class="line">      METADATA_KEY.provide,</span><br><span class="line">      newMetadata,</span><br><span class="line">      <span class="built_in">Reflect</span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 我们将所有需要绑定到容器的类都用 <code>@Provide</code> 去标记，收集并记录到 Reflect 对象中。如：</p>
+ <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Provide</span>(<span class="string">'b'</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> B &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">p: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 但到这里收集依赖的部分还没完成，因为类都定义在文件内的。我们需要一个方法将需要的文件一次性都 <code>require</code> 进来，让依赖注册生效（<code>@Provide</code>）。下面的 <code>binding</code> 方法就是完成这件事，我们需要在应用的生命周期初始化阶段去手动调用它：</p>
+<blockquote>
+<p>参考 <a href="https://github.com/darukjs/daruk/blob/2.0/src/core/daruk.ts">darukjs</a> 项目实现</p>
+</blockquote>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ./container.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">binding</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 对目录没有限制，这里只是将常规目录作为示例</span></span><br><span class="line">  <span class="keyword">await</span> _loadFile(join(__dirname, <span class="string">'./middlewares'</span>));</span><br><span class="line">  <span class="keyword">await</span> _loadFile(join(__dirname, <span class="string">'./controllers'</span>));</span><br><span class="line">  <span class="keyword">await</span> _loadFile(join(__dirname, <span class="string">'./services'</span>));</span><br><span class="line">  container.load(buildProviderModule());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">_loadFile</span>(<span class="params">path: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> recursive(path).then(<span class="function">(<span class="params">files: <span class="built_in">Array</span>&lt;any&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> files</span><br><span class="line">      .filter(<span class="function">(<span class="params">file</span>) =&gt;</span> isJsTsFile(file))</span><br><span class="line">      .map(<span class="function">(<span class="params">file</span>) =&gt;</span> file.replace(JsTsReg, <span class="string">''</span>))</span><br><span class="line">      .forEach(<span class="function">(<span class="params">path: string</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">require</span>(path);</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;).catch(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 调用 binding 函数就会将 <code>middlewares</code>、<code>controllers</code>、<code>services</code> 目录中所有 <code>@Provide</code> 装饰的 class 都绑定到容器。<br> 这里还缺两块，Container 的 load 方法，还有 <code>buildProviderModule</code> 函数。</p>
+<p> <code>buildProviderModule</code> 函数就是为了从 Reflect 上拿到所有依赖项目。</p>
+<blockquote>
+<p><code>buildProviderModule</code> 参考 <code>inversify-binding-decorators</code> 的实现</p>
+</blockquote>
+ <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ./container.ts</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 省略已实现的代码</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildProviderModule</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">bind: <span class="built_in">Function</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> provideMetadata: interfaces.ProvideSyntax[] = Reflect.getMetadata(METADATA_KEY.provide, Reflect) || [];</span><br><span class="line">    provideMetadata.map(<span class="function"><span class="params">metadata</span> =&gt;</span> bind(</span><br><span class="line">      metadata.id,</span><br><span class="line">      metadata.clazz,</span><br><span class="line">      metadata.args</span><br><span class="line">    ));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 上面代码中的核心就是 <code>Reflect.getMetadata(METADATA_KEY.provide, Reflect)</code>，对比 <code>Provide</code> 中的这部分</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Reflect</span>.defineMetadata(</span><br><span class="line">  METADATA_KEY.provide,</span><br><span class="line">  newMetadata,</span><br><span class="line">  <span class="built_in">Reflect</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p> 我们大致就能摸清依赖注册的原理，<code>@Provide</code> 通过 <code>Reflect.defineMetadata</code> 完成收集。 <code>buildProviderModule</code> 方法中通过 <code>Reflect.getMetadata</code> 拿到收集到的类交给 <code>container.load</code> 完成依赖注册。</p>
+<p> <code>Container.load</code> 如下：</p>
+ <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> Container &#123;</span><br><span class="line">  <span class="comment">// ...省略前面已实现的代码</span></span><br><span class="line">  <span class="keyword">public</span> load(register) &#123;</span><br><span class="line">    <span class="comment">// 注意，这里只是简化的例子</span></span><br><span class="line">    register(<span class="keyword">this</span>.bind)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Inject<br> 前一步我们完成了依赖注册，将所有 <code>待依赖</code> 的 class 都在 container 中保存起来。接下来就是最后一步：在需要依赖的地方注入依赖项。<br> 我们要做到的就是在类初始化时能自动拿到依赖对象的实例，不需要在依赖对象初始化时传参。我们已经将所有相关类都注册到 container 中，要使用某个类时，只要将 container 中对应的类实例化给相应属性即可。有了上面 Provide 的经验我们很容易就可以想到，通过装饰器很容易办到。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ./inject.ts</span></span><br><span class="line"><span class="keyword">import</span> container <span class="keyword">from</span> <span class="string">'./container'</span></span><br><span class="line"><span class="keyword">const</span> INJECTION = <span class="built_in">Symbol</span>.for(<span class="string">"INJECTION"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Inject</span>(<span class="params">serviceIdentifier: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">proto: any, key: string</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> resolve = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 从 container 中取值</span></span><br><span class="line">      <span class="keyword">return</span> container.get(serviceIdentifier);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// 缓存值</span></span><br><span class="line">      <span class="keyword">if</span> (!<span class="built_in">Reflect</span>.hasMetadata(INJECTION, <span class="keyword">this</span>, key)) &#123;</span><br><span class="line">        <span class="built_in">Reflect</span>.defineMetadata(INJECTION, resolve(), <span class="keyword">this</span>, key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">Reflect</span>.hasMetadata(INJECTION, <span class="keyword">this</span>, key)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.getMetadata(INJECTION, <span class="keyword">this</span>, key);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> resolve();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">setter</span>(<span class="params">newVal: any</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">Reflect</span>.defineMetadata(INJECTION, newVal, <span class="keyword">this</span>, key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(proto, key, &#123;</span><br><span class="line">      configurable: <span class="literal">true</span>,</span><br><span class="line">      enumerable: <span class="literal">true</span>,</span><br><span class="line">      <span class="keyword">get</span>: getter,</span><br><span class="line">      <span class="keyword">set</span>: setter</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <code>Inject</code> 通过设置属性的 getter 和 setter 拦截属性的获取和设置。获取时从 container 中拿到依赖对应依赖，设置时则替换当前依赖的缓存值，等到下次获取时使用这个设置的新值。</p>
+<p> 经过上面的设置，原来 <code>A</code>、<code>B</code> 的例子即可改为：</p>
+ <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局共用</span></span><br><span class="line"><span class="keyword">const</span> container = <span class="keyword">new</span> Container();</span><br><span class="line"><span class="comment">// ./services/b.ts</span></span><br><span class="line"><span class="meta">@Proivde</span>(<span class="string">'b'</span>, [<span class="number">10</span>])</span><br><span class="line"><span class="keyword">class</span> B &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">p: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.p = p;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ./services/a.ts</span></span><br><span class="line"><span class="meta">@Proivde</span>(<span class="string">'a'</span>)</span><br><span class="line"><span class="keyword">class</span> A &#123;</span><br><span class="line">  <span class="meta">@Inject</span>(<span class="string">'b'</span>)</span><br><span class="line">  <span class="keyword">private</span> b:B;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ./main.ts</span></span><br><span class="line">binding()</span><br><span class="line"><span class="built_in">console</span>.log(container.get(<span class="string">'a'</span>));  <span class="comment">// =&gt; A &#123; b: B &#123; p: 10 &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h3><p>IoC 最早运用在后端服务上，随着时间的推移，像 Angular 这样的优秀框架实现了前端的 IoC，也给前端提出了新要求。技术思想是不分前后端的，不管是 MVC、IoC、AOP 抑或是别的，这些业界的经典设计，是一个在前后端都通用的思想或范式。我们不能给自己的技术设限，优秀的思想永远都是学习的目标。</p>
+<p>前端在近些年日新月异，我们需要拥抱变化，融入变化；在未知的技术面前虚心学习是技术进阶的必经之路。</p>
+<h3 id="相关示例"><a href="#相关示例" class="headerlink" title="相关示例"></a>相关示例</h3><p>. <a href="https://gitee.com/lei2jun/di-example">di-example</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/DI/">DI</a>, <a class="has-link-grey -link" href="/tags/原理/">原理</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/11/19/Node-max-header-size/">
+                <span class="level-item">如何设置 Node 的 header size</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.lei2jun.club/2020/11/27/DI/';
+        this.page.identifier = 'DI';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'lei2jun' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/site-avatar.png" alt="Lei2jun">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Lei2jun
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        三流程序员
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Shen zhen</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            1
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            14
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/lei2jun" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/lei2jun">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/源码阅读/">
+            <span class="level-start">
+                <span class="level-item">源码阅读</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/micro-frontend/" style="font-size: 10px;">micro frontend</a> <a href="/tags/mobx/" style="font-size: 10px;">mobx</a> <a href="/tags/position/" style="font-size: 10px;">position</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/sticky/" style="font-size: 10px;">sticky</a> <a href="/tags/tokenize/" style="font-size: 10px;">tokenize</a> <a href="/tags/vue/" style="font-size: 20px;">vue</a> <a href="/tags/原理/" style="font-size: 16.67px;">原理</a> <a href="/tags/微前端/" style="font-size: 10px;">微前端</a> <a href="/tags/转载/" style="font-size: 13.33px;">转载</a>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/27/DI/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/di.png" alt="浅谈 DI(依赖注入)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T08:00:00.000Z">2020-11-27</time></div>
+                    <a href="/2020/11/27/DI/" class="title has-link-black-ter is-size-6 has-text-weight-normal">浅谈 DI(依赖注入)</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/19/Node-max-header-size/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/nodejs.jpg" alt="如何设置 Node 的 header size">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-19T03:28:00.000Z">2020-11-19</time></div>
+                    <a href="/2020/11/19/Node-max-header-size/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何设置 Node 的 header size</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/04/14/Git-rebase/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git-rebase.png" alt="Git rebase 基础用法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T11:20:00.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/Git-rebase/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git rebase 基础用法</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/30/Git/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git.jpg" alt="Git内部存储原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-30T14:53:00.000Z">2020-03-30</time></div>
+                    <a href="/2020/03/30/Git/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git内部存储原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/27/Micro-frontend/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/micro-frontend.jpg" alt="微前端">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-27T07:09:00.000Z">2020-03-27</time></div>
+                    <a href="/2020/03/27/Micro-frontend/" class="title has-link-black-ter is-size-6 has-text-weight-normal">微前端</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/DI/">
+                        <span class="tag">DI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node/">
+                        <span class="tag">Node</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/css/">
+                        <span class="tag">css</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/micro-frontend/">
+                        <span class="tag">micro frontend</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mobx/">
+                        <span class="tag">mobx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/position/">
+                        <span class="tag">position</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react/">
+                        <span class="tag">react</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/sticky/">
+                        <span class="tag">sticky</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/tokenize/">
+                        <span class="tag">tokenize</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vue/">
+                        <span class="tag">vue</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/原理/">
+                        <span class="tag">原理</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/微前端/">
+                        <span class="tag">微前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/转载/">
+                        <span class="tag">转载</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/27/DI/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/di.png" alt="浅谈 DI(依赖注入)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T08:00:00.000Z">2020-11-27</time></div>
+                    <a href="/2020/11/27/DI/" class="title has-link-black-ter is-size-6 has-text-weight-normal">浅谈 DI(依赖注入)</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/19/Node-max-header-size/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/nodejs.jpg" alt="如何设置 Node 的 header size">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-19T03:28:00.000Z">2020-11-19</time></div>
+                    <a href="/2020/11/19/Node-max-header-size/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何设置 Node 的 header size</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/04/14/Git-rebase/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git-rebase.png" alt="Git rebase 基础用法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T11:20:00.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/Git-rebase/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git rebase 基础用法</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/30/Git/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/git.jpg" alt="Git内部存储原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-30T14:53:00.000Z">2020-03-30</time></div>
+                    <a href="/2020/03/30/Git/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Git内部存储原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/27/Micro-frontend/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnails/micro-frontend.jpg" alt="微前端">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-27T07:09:00.000Z">2020-03-27</time></div>
+                    <a href="/2020/03/27/Micro-frontend/" class="title has-link-black-ter is-size-6 has-text-weight-normal">微前端</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/DI/">
+                        <span class="tag">DI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node/">
+                        <span class="tag">Node</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/css/">
+                        <span class="tag">css</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/micro-frontend/">
+                        <span class="tag">micro frontend</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mobx/">
+                        <span class="tag">mobx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/position/">
+                        <span class="tag">position</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react/">
+                        <span class="tag">react</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/sticky/">
+                        <span class="tag">sticky</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/tokenize/">
+                        <span class="tag">tokenize</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vue/">
+                        <span class="tag">vue</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/原理/">
+                        <span class="tag">原理</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/微前端/">
+                        <span class="tag">微前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/转载/">
+                        <span class="tag">转载</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/logo.png" alt="浅谈 DI(依赖注入)" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2023 Leijun&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                
+                <br>
+                <a href="http://beian.miit.gov.cn/" target="_blank">粤ICP备2023017688号-1</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://blog.lei2jun.club',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/z16.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
